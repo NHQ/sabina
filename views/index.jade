@@ -24,12 +24,14 @@
 script(type='text/javascript')
   $(document).ready(function(){
   $('.editable').aloha();
-  var pbj = {"x":1000,"y":100};
-  GENTICS.Aloha.FloatingMenu.pinned = false;
-  GENTICS.Aloha.FloatingMenu.floatTo(pbj);
   $('#MyForm').transloadit({
       wait: true,
       autoSubmit: false,
       fields: '#_id'
     });
+  $('.editable').bind('click', function(){
+  $('#ext-comp-1016').hide();
+  setTimeout("$('#ext-comp-1016').hide().css({'left':0})", 600);
+
+  })
   });

@@ -1,0 +1,22 @@
+!!!
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body#portfolio
+    #menu
+      h2 PLD Construction and Development
+      ul
+        li a(href="/about") About
+        li a(aref="/services") Services
+        li a(href="/gallery") Portfolio
+        li a(href="/Gallery") Gallery
+    #content    
+      - each bldg in bldgs
+        #bldg
+          img(src=bldg.medium)
+          p blgd.address
+          br
+          p Status: =bldg.status
+          br
+          p=bldg.description

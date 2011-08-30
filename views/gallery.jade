@@ -1,0 +1,30 @@
+!!!
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body#portfolio
+    #menu
+      h2 PLD Construction and Development
+      ul
+        li a(href="/about") About
+        li a(aref="/services") Services
+        li a(href="/gallery") Portfolio
+        li a(href="/Gallery") Gallery
+    #sidebar
+      ul
+        - each s in sections
+          if (s = section)
+            li=s
+          else
+            li
+              a(href="/"+s) s
+    #content
+      - each g in gallery
+        div.thumb
+          img(src=g.thumb)
+  
+  script(type="text/javascript")
+    var frame = []
+    - each g in gallery
+      var.push(g.large)
