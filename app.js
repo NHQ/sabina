@@ -171,7 +171,7 @@ app.get('/new/bldg', function(req, res){
     			"key": "08f81b65f9c4433796ca6f17861f57bf"
   			},
  			"template_id": "b01e9ea666c741a4bc428d8b783b161d",
-			"notify_url": "http://72.2.117.15/uploads?_id="+_id
+			"notify_url": "http://74.207.237.52:3000/uploads?_id="+_id
 		}
 		}})
 })
