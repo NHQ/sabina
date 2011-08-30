@@ -61,15 +61,16 @@ app.post('/picload', function(req, res){
 });
 
 app.post('/uploads', function (req, res){
-	var info = req.body;
+	var info = JSON.parse(req.body.transloadit);
 	console.log(info);
 		var _id = info.fields._id || null;
 	
 // get the image files
 
-	//request.get(info.uploads.url).pipe(fs.createWriteStream('public/images/'+info.uploads.name));
-	//request.get(info.thumb.url).pipe(fs.createWriteStream('public/images/'+info.encode.name));
-	//request.get(info.medium.url).pipe(fs.createWriteStream('public/images/'+info.encode.name));
+	request.get(info.uploads[0].url).pipe(fs.createWriteStream('public/images/'+info.uploads.name));
+if (info.results.thumb){request.get(info.results.thumb.url).pipe(fs.createWriteStream('public/images/'+info.encode.name));}
+
+if (info.results.medium){request.get(info.medium.url).pipe(fs.createWriteStream('public/images/'+info.encode.name));}
 
 // write to gallery.json
 	if (info.fields.section)
