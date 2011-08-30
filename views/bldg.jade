@@ -21,15 +21,15 @@ html
                 label=key+':'
                 input(type='text', name=key, value=val)
         input(type="submit", id="submit", value="Save Changes!")
-      p Upload New Image: 
-        form(action="http://api2.transloadit.com/assemblies", id="MyForm", enctype="multipart/form-data", method="POST")
-            input(type="hidden", name="params", value=JSON.stringify(tranny))
-            input(type="hidden", id="_id", name="_id", value=id)
-            input(type="file", name="my_file", id="file")
-            input(type="submit", value="Upload Image")
-            div#progress
-      - if (bldg.large)
-        img(src=bldgs.large)
+    p Upload New Image: 
+      form(action="http://api2.transloadit.com/assemblies", id="MyForm", enctype="multipart/form-data", method="POST")
+          input(type="hidden", name="params", value=JSON.stringify(tranny))
+          input(type="hidden", id="_id", name="_id", value=id)
+          input(type="file", name="my_file", id="file")
+          input(type="submit", value="Upload Image")
+          div#progress
+    - if (bldg.large)
+      img(src=bldgs.large)
   script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js')
   script(type="text/javascript", src="http://assets.transloadit.com/js/jquery.transloadit2.js")
   script(type="text/javascript", src="/js/pld.js")
