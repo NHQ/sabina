@@ -63,9 +63,8 @@ app.post('/picload', function(req, res){
 app.post('/uploads', function (req, res){
 	res.writeHead('200');
 	var info = req.body;
-	res.end();
-	var _id = info.fields._id || null;
 	console.log(info);
+		var _id = info.fields._id || null;
 	
 // get the image files
 
@@ -92,7 +91,7 @@ app.post('/uploads', function (req, res){
 			console.log(e || "no error")
 		});
 	}
-		
+	res.end();		
 })
 
 
