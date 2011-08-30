@@ -7,24 +7,23 @@ html
     #menu
       h2 PLD Construction and Development
       ul
-        li a(href="/about") About
-        li a(aref="/services") Services
-        li a(href="/gallery") Portfolio
-        li a(href="/Gallery") Gallery
+        li 
+          a(href="/about") About
+        li 
+          a(href="/services") Services
+        li 
+          a(href="/portfolio") Portfolio
+        li 
+          a(href="/gallery") Gallery
     #sidebar
       ul
         - each s in sections
-          if (s = section)
+          if (s == section)
             li=s
           else
             li
-              a(href="/"+s) s
+              a(href="/"+s) #{s}
     #content
       - each g in gallery
         div.thumb
           img(src=g.thumb)
-  
-  script(type="text/javascript")
-    var frame = []
-    - each g in gallery
-      var.push(g.large)

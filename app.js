@@ -87,7 +87,7 @@ app.post('/uploads', function (req, res){
 
 	if(_id){
 		var portfolio = JSON.parse(fs.readFileSync('public/json/portfolio.json'));
-		porfolio = _.extend(portfolio[_id], {'img':{'large': 'images/'+info.uploads.url, 'medium': 'images/'+info.medium.url, 'thumb':'images/'+info.thumb.url}})
+		porfolio[_id] = _.extend(portfolio[_id], {'img':{'large': 'images/'+info.uploads.url, 'medium': 'images/'+info.medium.url, 'thumb':'images/'+info.thumb.url}})
 		fs.writeFile("public/json/porfolio.json", JSON.stringify(porfolio), function(e,r){
 			console.log(e || "no error")
 		});
@@ -97,7 +97,7 @@ app.post('/uploads', function (req, res){
 
 
 app.get('/portfolio', function(req,res){
-	fs.readdir('public/json/portfolio.json', function(e,r){
+	fs.readFile('public/json/portfolio.json', function(e,r){
 		console.log(e+"\n"+r);
 		res.render('portfolio', {layout: false, title: 'PLD Custom Home Builders', locals: {
 			bldgs: JSON.parse(r)
@@ -106,7 +106,7 @@ app.get('/portfolio', function(req,res){
 })
 
 app.get('/about', function(req,res){
-	fs.readdir('public/json/about.json', function(e,r){
+	fs.readFile('public/json/about.json',encoding='utf8', function(e,r){
 		console.log(e+"\n"+r)
 		res.render('about', {layout: false, title: 'PLD Custom Home Builders', locals: {
 			about: JSON.parse(r)
@@ -115,42 +115,33 @@ app.get('/about', function(req,res){
 })
 
 app.get('/services', function(req,res){
-	fs.readdir('public/json/services.json', function(e,r){
+	fs.readFile('public/json/services.json', function(e,r){
 		console.log(e+"\n"+r)
-		res.render('about', {layout: false, title: 'PLD Custom Home Builders', locals: {
-			about: JSON.parse(r)
+		res.render('services', {layout: false, title: 'PLD Custom Home Builders', locals: {
+			services: JSON.parse(r)
 			}})
 	})
 })
 
 app.get('/gallery', function(req,res){
-	var d = {"kitchens":null, "Bathrooms":null};
-	console.log(JSON.stringify(d));
-	fs.writeFileSync('public/json/gallery.json', JSON.stringify(d));
 	var d = fs.readFileSync('public/json/gallery.json');
-	console.log(JSON.parse(d));
-/*	
 	fs.readFile('public/json/gallery.json', encoding='utf8', function(e,r){
-		var k = {"kitchens":null, "bathrooms":null};
-		var p = JSON.stringify(k);
 		var content = JSON.parse(r);
-		console.log(content);
-				console.log(e+"\n"+r);
+		console.log(e+"\n"+r);
 		var section = req.query.section || Object.keys(content)[0];
 		console.log(section);
-		res.render('about', {layout: false, title: 'PLD Custom Home Builders', locals: {
+		res.render('gallery', {layout: false, title: 'PLD Custom Home Builders', locals: {
 			section: section,
 			sections: Object.keys(content),
-			gallery: JSON.parse(p)[req.params.section]
+			gallery: section
 			}})
 	})
-*/
 })
 
 app.post('/new/bldg', function(req,res){
 	console.log(req.body._id);
 	var portfolio = JSON.parse(fs.readFileSync('public/json/portfolio.json'));
-	porfolio = _.extend(portfolio[_id], req.body)
+	porfolio[_id] = _.extend(portfolio[_id], req.body);
 	fs.writeFile("public/json/porfolio.json", JSON.stringify(porfolio), function(e,r){
 		console.log(e || "no error")
 	});
@@ -162,10 +153,15 @@ app.get('/new/bldg', function(req, res){
 		description: "",
 		status: ""
 	};
-	var _id = Math.random().toString().slice(3,10);
+	var portfolio = JSON.parse(fs.readFileSync('public/json/portfolio.json'));
+	var _id = portfolio.length + 1;
+	portfolio.push.({})
+	fs.writeFile('public/json/portfolio.json', JSON.stringify(portfolio), function(e,r){
+				console.log(e+"\n"+r);
+	})
 	res.render('bldg', {layout: false, title: 'New Building', locals: {
 		bldg: bldg,
-		id: _id,
+		id: _id, // index
 		tranny: {
   			"auth": 
 			{
