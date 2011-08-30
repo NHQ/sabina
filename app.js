@@ -2,16 +2,13 @@
  * NOTES
 	* Possible idea for other Sabina website: property picks a la blog
 */
-/**
- * Module dependencies.
- */
 
-var express = require('express'),
-	mongoose = require('mongoose');	
-	mongoose.connect('mongodb://localhost/test');
-var _ = require('underscore')
+var express = require('express')
+	,	_ = require('underscore')
 	, request = require('request')
-	, fs = require('fs');
+	, fs = require('fs')
+	, sys = require('sys')
+	, formidable = require('formidable');
 
 var app = module.exports = express.createServer();
 
@@ -34,122 +31,152 @@ app.configure('production', function(){
   app.use(express.errorHandler()); 
 });
 
-// Models
-var schema = mongoose.Schema;
-var Images = new schema({
-	title: String,
-	desscription: String,
-	filepath: String, 
-	thumb: String
-});
-var building = new schema({
-	name: String,
-	address: String,
-	description: String,
-	year_built: Number,
-	architect: String,
-	zoning: String,
-	neighborhood: String,
-	list_price: Number,
-	taxes: String,
-	contact: String,
-	owner: String,
-	floor_plan: {description: String, pictures: [Images]}, 
-	pictures: [Images],
-	sections: {name: String, description: String, pictures: [Images]}	
-});
-
-mongoose.model('Images', Images);
-mongoose.model('building', building);
-
 // Routes
-function upDoc(_id, keys){
+
+function picload(id, valu){
 	// keys is an obj
-	var building = mongoose.model('building');
-	building.update({_id: _id}, keys, function (err, res, doc){
-		console.log(err);
-		console.log(res);
-		console.log(doc)
+	var doc = JSON.parse(fs.readFileSync('public/json/'+req.params.code+'.json'))
+	fs.writeFile('public/bldgs/'+id+'.json', JSON.stringify(req.body), function(err){
+		if (!err) console.log('saved!');
+		res.redirect('/'+req.params.code)
 	})
 }
-function getDoc(_id){
-	var building = mongoose.model('building');
-	doc = building.findById(_id, function (err, doc){
-		console.log(doc);
-		if(!err) return doc;
+
+app.post('/picload', function(req, res){
+	var form = new formidable.IncomingForm();
+	res.writeHead(200, {'content-type': 'text/plain'});
+	form.uploadDir = 'public/bldgs/';
+	form.keepExtensions = true;
+	form.on('progress', function(bytesReceived, bytesExpected){
+		var buff = new Buffer(bytesReceived.toString(),encoding='utf8')
+		res.write(buff);
+		console.log(bytesReceived +'\n'+ bytesExpected)
 	})
-}
-function newImg (){
-	var image = mongoose.model('Images');
-	doc = new image();
-	doc.name = "New image"
-	doc.save(function(err, doc){
-		if(err){console.log(err)}
-		if(doc)
-		{
-			console.log(doc._id);
-		}
+	form.on('end', function(){
+		res.end();
 	})
-}
-function newDoc (){
-	var building = mongoose.model('building');
-	doc = new building();
-	doc.name = "New Building"
-	doc.save(function(err, doc){
-		if(err){console.log(err)}
-		if(doc)
-		{
-			console.log(doc._id);
-		}
-	})
-}
+	form.parse(req, function(err, fields, files){
+		console.log(fields+'\n'+files)
+	});
+});
 
 app.post('/uploads', function (req, res){
 	res.writeHead('200');
-	var _id = req.query._id;
 	var info = req.body;
+	res.end();
+	var _id = info.fields._id || null;
 	console.log(info);
 	
-	request({uri: info.uploads.url}, function(err, res, body){
-		if (!error && response.statusCode == 200)
+// get the image files
+
+	request.get(info.uploads.url).pipe(fs.createWriteStream('public/images/'+info.uploads.name));
+	request.get(info.thumb.url).pipe(fs.createWriteStream('public/images/'+info.encode.name));
+	request.get(info.medium.url).pipe(fs.createWriteStream('public/images/'+info.encode.name));
+
+// write to gallery.json
+	if (info.fields.section)
 		{
-			fs.writeFile('public/images'+info.uploads.name, body, function (err){
-				if(!err)
-				{
-					console.log('saved')
-					upDoc(_id, {pictures:{'title':'plume'}})
-				}
-			})
-	    }
-	})
-	
+				var gallery = JSON.parse(fs.readFileSync('public/json/gallery.json'));
+				gallery[info.fields.section].push({'large': 'images/'+info.uploads.url, 'medium': 'images/'+info.medium.url, 'thumb':'images/'+info.thumb.url})
+				fs.writeFile("public/json/gallery.json", JSON.stringify(gallery), function(e,r){
+					console.log(e || "no error")
+				});
+		}
+
+// for Bldg pictures	
+
+	if(_id){
+		var portfolio = JSON.parse(fs.readFileSync('public/json/portfolio.json'));
+		porfolio = _.extend(portfolio[_id], {'img':{'large': 'images/'+info.uploads.url, 'medium': 'images/'+info.medium.url, 'thumb':'images/'+info.thumb.url}})
+		fs.writeFile("public/json/porfolio.json", JSON.stringify(porfolio), function(e,r){
+			console.log(e || "no error")
+		});
+	}
+		
 })
 
-app.get('/admin', function(req, res){
-	newDoc()
-  	res.render('index', {locals:
-    	{
-			title: 'Admin',
-			doc: doc,
-			tranny: {
-	  			"auth": 
-				{
-	    			"key": "b2841a053d384302bf39b2ab4dbc88ec"
-	  			},
-	  			"template_id": "6f8d596087084fc18cfaa9924801e17c",
-	  			"redirect_url": "http://72.2.117.15/upload?_id="+doc._id
-			}
-		}
-  });
-});
 
-app.get('/', function(req, res){
-  res.render('front', {
-    title: 'Welcome'
-  });
-});
+app.get('/portfolio', function(req,res){
+	fs.readdir('public/json/portfolio.json', function(e,r){
+		console.log(e+"\n"+r);
+		res.render('portfolio', {layout: false, title: 'PLD Custom Home Builders', locals: {
+			bldgs: JSON.parse(r)
+			}})
+	})
+})
+
+app.get('/about', function(req,res){
+	fs.readdir('public/json/about.json', function(e,r){
+		console.log(e+"\n"+r)
+		res.render('about', {layout: false, title: 'PLD Custom Home Builders', locals: {
+			about: JSON.parse(r)
+			}})
+	})
+})
+
+app.get('/services', function(req,res){
+	fs.readdir('public/json/services.json', function(e,r){
+		console.log(e+"\n"+r)
+		res.render('about', {layout: false, title: 'PLD Custom Home Builders', locals: {
+			about: JSON.parse(r)
+			}})
+	})
+})
+
+app.get('/gallery', function(req,res){
+	var d = {"kitchens":null, "Bathrooms":null};
+	console.log(JSON.stringify(d));
+	fs.writeFileSync('public/json/gallery.json', JSON.stringify(d));
+	var d = fs.readFileSync('public/json/gallery.json');
+	console.log(JSON.parse(d));
+/*	
+	fs.readFile('public/json/gallery.json', encoding='utf8', function(e,r){
+		var k = {"kitchens":null, "bathrooms":null};
+		var p = JSON.stringify(k);
+		var content = JSON.parse(r);
+		console.log(content);
+				console.log(e+"\n"+r);
+		var section = req.query.section || Object.keys(content)[0];
+		console.log(section);
+		res.render('about', {layout: false, title: 'PLD Custom Home Builders', locals: {
+			section: section,
+			sections: Object.keys(content),
+			gallery: JSON.parse(p)[req.params.section]
+			}})
+	})
+*/
+})
+
+app.post('/new/bldg', function(req,res){
+	console.log(req.body._id);
+	var portfolio = JSON.parse(fs.readFileSync('public/json/portfolio.json'));
+	porfolio = _.extend(portfolio[_id], req.body)
+	fs.writeFile("public/json/porfolio.json", JSON.stringify(porfolio), function(e,r){
+		console.log(e || "no error")
+	});
+})
+
+app.get('/new/bldg', function(req, res){
+	var bldg = {
+		address: "",
+		description: "",
+		status: ""
+	};
+	var _id = Math.random().toString().slice(3,10);
+	res.render('bldg', {layout: false, title: 'New Building', locals: {
+		bldg: bldg,
+		id: _id,
+		tranny: {
+  			"auth": 
+			{
+    			"key": "08f81b65f9c4433796ca6f17861f57bf"
+  			},
+ 			"template_id": "b01e9ea666c741a4bc428d8b783b161d",
+			"notify_url": "http://72.2.117.15/uploads?_id="+_id
+		}
+		}})
+})
+
 
 app.listen(3000);
 console.log("Express server listening on port %d", app.address().port);
-console.log(_.keys(building.paths));
-newImg();
