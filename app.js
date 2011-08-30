@@ -139,10 +139,13 @@ app.get('/gallery', function(req,res){
 })
 
 app.post('/new/bldg', function(req,res){
-	console.log(req.body._id);
+	console.log(req.body);
+	var _id = req.body._id;
 	var portfolio = JSON.parse(fs.readFileSync('public/json/portfolio.json'));
-	porfolio[_id] = _.extend(portfolio[_id], req.body);
-	fs.writeFile("public/json/porfolio.json", JSON.stringify(porfolio), function(e,r){
+	console.log(portfolio[_id]);
+	_.extend(portfolio[_id], req.body);
+		console.log(portfolio[_id]);
+	fs.writeFile("public/json/portfolio.json", JSON.stringify(portfolio), function(e,r){
 		console.log(e || "no error")
 	});
 })
@@ -154,8 +157,8 @@ app.get('/new/bldg', function(req, res){
 		status: ""
 	};
 	var portfolio = JSON.parse(fs.readFileSync('public/json/portfolio.json'));
-	var _id = portfolio.length + 1;
-	portfolio.push.({})
+	var _id = portfolio.length;
+	portfolio[_id] = {};
 	fs.writeFile('public/json/portfolio.json', JSON.stringify(portfolio), function(e,r){
 				console.log(e+"\n"+r);
 	})

@@ -5,9 +5,9 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     form.cmxform(action="/new/bldg", method="post", id=id)
-      input(type="hidden", name="_id", value=id)
       fieldset
-        legend Step 1: Fill Out Basic Building Information
+        legend A New Porpoerty File Has Been Created! Fill out the info, or 
+          a(href="delete/bldg"+id) delete it
         ol
           - each val, key in bldg
             - if (key == 'description')
@@ -20,18 +20,22 @@ html
               li.entry
                 label=key+':'
                 input(type='text', name=key, value=val)
-          p Upload image: 
-            form(action="/picload", id="MyForm", enctype="multipart/form-data", method="POST")
-                input(type="hidden", name="params", value=JSON.stringify(tranny))
-                input(type="hidden", id="_id", name="_id", value=id)
-                input(type="file", name="my_file", id="file")
-                input(type="submit", value="Upload")
-                div#progress
-    script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js')
-    script(type="text/javascript", src="http://assets.transloadit.com/js/jquery.transloadit2.js")
-    script(type="text/javascript")
-      $(document).ready(function(){
-      $('#MyForm').transloadit({
-        wait: true,
-        autoSubmit: false,
-        fields: '#_id'
+        input(type="submit", id="submit", value="Save Changes!")
+      p Upload New Image: 
+        form(action="/picload", id="MyForm", enctype="multipart/form-data", method="POST")
+            input(type="hidden", name="params", value=JSON.stringify(tranny))
+            input(type="hidden", id="_id", name="_id", value=id)
+            input(type="file", name="my_file", id="file")
+            input(type="submit", value="Upload Image")
+            div#progress
+      - if (bldg.large)
+        img(src=bldgs.large)
+  script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js')
+  script(type="text/javascript", src="http://assets.transloadit.com/js/jquery.transloadit2.js")
+  script(type="text/javascript")
+    $(document).ready(function(){
+    $('#MyForm').transloadit({
+      wait: true,
+      autoSubmit: false,
+      fields: '#_id'
+    })

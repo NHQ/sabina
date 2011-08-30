@@ -19,8 +19,9 @@ html
       - each bldg in bldgs
         #bldg
           img(src=bldg.medium)
-          p blgd.address
+          p= bldg.address
           br
-          p Status: =bldg.status
+          p Status: 
+            =bldg.status
           br
           p=bldg.description
