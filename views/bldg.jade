@@ -22,7 +22,7 @@ html
                 input(type='text', name=key, value=val)
         input(type="submit", id="submit", value="Save Changes!")
       p Upload New Image: 
-        form(action="/picload", id="MyForm", enctype="multipart/form-data", method="POST")
+        form(action="http://api2.transloadit.com/assemblies", id="MyForm", enctype="multipart/form-data", method="POST")
             input(type="hidden", name="params", value=JSON.stringify(tranny))
             input(type="hidden", id="_id", name="_id", value=id)
             input(type="file", name="my_file", id="file")
