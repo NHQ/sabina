@@ -35,7 +35,7 @@ html
         select(name="section")
           - each s in sections
             option(value=s) #{s}
-        input(type="submit",value="delete section!", onclick='confirm("Are you certain of this?")'))
+        input(type="submit",value="delete section!", onclick='confirm("Are you certain of this?")')
       h3 Upload image to #{section}
       form(action="http://api2.transloadit.com/assemblies", id="galleryForm", enctype="multipart/form-data", method="POST")
           input(type="hidden", name="params", value=JSON.stringify(tranny))
