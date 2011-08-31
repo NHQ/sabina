@@ -1,17 +1,56 @@
 body {
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 16px 'Raleway', Helvetica, Arial, sans-serif;
+  width:1150px;
+  margin:0 auto;
 }
-
+p {width:66ex;}
 a {
-  color: #00B7FF;
+  color: #aaa;
+  text-transform:uppercase;
+  text-decoration:none;
+  line-height:35px
+}
+a:hover{border-bottom:1px dotted}
+.active {color:#000;border:none}
+h1{font-size:28px;margin-top:23px}
+.right{float:right}
+.m200{margin-left:200px;}
+h3{border-top:1px solid #ddd;padding-top:15px;margin-top:5px}
+#content {
+	width:800px;
+    float:right
 }
 
-#page {
-	width:900px;
-	height:1000px;
-	margin: 0 auto;
+#menu {
+    height:90px;
+    margin:0 auto;
+}
+#menu h1 {display:inline;float:left;}
+
+#menu ul {margin-right:0}
+#menu ul li {margin: 20px 20px; display:inline;float:right}
+
+#sidebar{
+    width:300px;
+    float:left;
+    font-size:18px
+}
+#sidebar ul {
+    list-style-type:none;
 }
 
+#sidebar fieldset{max-width:300px}
+
+.thumb{display:inline;float:left;margin:5px}
+.thumb img{
+    display:inline;
+    width:167px;
+    height:167px
+}
+.preview, .#uploaded {width:500px;
+height:500px}
+#admin{}
+#pip{margin:0 auto; width:800px}
 form.cmxform{
 	width:700px;
 	margin:0 auto;

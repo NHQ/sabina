@@ -3,11 +3,10 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(href='http://fonts.googleapis.com/css?family=Raleway:100', rel='stylesheet', type='text/css')
   body#portfolio
     #menu
-      h2 PLD Construction and Development -- 
-        Admin 
-        a(href="") Logout
+      h1 PLD Construction and Development
       ul
         li 
           a(href="/edit/about") About
@@ -21,33 +20,41 @@ html
       ul
         - each s in sections
           if (s == section)
-            li=s
+            li
+              a(href="/edit/gallery?section="+s, class="active") #{s}
           else
             li
               a(href="/edit/gallery?section="+s) #{s}
-      h3 Add Another Section
-      form(action="/add/section", method="POST")
-        input(type="text", name="section", value="")
-        input(type="submit", value="Add New Section")
-      h3 Delete a section
-      p * this will delete all images in that section
-      form(action="/del/section", method="POST")
-        select(name="section")
-          - each s in sections
-            option(value=s) #{s}
-        input(type="submit",value="delete section!", onclick='confirm("Are you certain of this?")')
-      h3 Upload image to #{section}
-      form(action="http://api2.transloadit.com/assemblies", id="galleryForm", enctype="multipart/form-data", method="POST")
-          input(type="hidden", name="params", value=JSON.stringify(tranny))
-          input(type="hidden", id="section", name="section", value=section)
-          input(type="file", name="my_file", id="file")
-          input(type="submit", value="Upload Image")
-          div#progress
+      fieldset#admin
+        lengend Admin - Edit Gallery
+        h3 Upload image to #{section}
+        form(action="http://api2.transloadit.com/assemblies", id="galleryForm", enctype="multipart/form-data", method="POST")
+            input(type="hidden", name="params", value=JSON.stringify(tranny))
+            input(type="hidden", id="section", name="section", value=section)
+            input(type="file", name="my_file", id="file")
+            input(type="submit", class="m200", value="Upload Image")
+            div#progress
+        h3 Add Another Section
+        form(action="/add/section", method="POST")
+          input(type="text", name="section", value="")
+          input(type="submit", value="Add New Section")
+        h3 Delete a section
+        p * this will delete all images in that section
+        form(action="/del/section", method="POST")
+          select(name="section")
+            - each s in sections
+              option(value=s) #{s}
+          input(type="submit",value="delete section!", onclick='confirm("Are you certain of this?")')
+
     #content
-      - for g in gallery
+      - each g, i in gallery
+        -  var usa = g.thumb || g.medium 
         div.thumb
-          img(src=gallery[g].thumb || gallery[g].medium)
-          form(action="/del/image", action="POST")
-            input(type="hidden", name="image", value=section)
-            input(type="hidden", name="index", value=g)
+          img(src="../"+usa)
+          form(action="/del/image", method="POST")
+            input(type="hidden", name="section", value=section)
+            input(type="hidden", name="index", value=i)
             input(type="submit", value="delete", onclick='confirm("Delete Image?")')
+  script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js')
+  script(type="text/javascript", src="http://assets.transloadit.com/js/jquery.transloadit2.js")
+  script(type="text/javascript", src="/js/pld.js")

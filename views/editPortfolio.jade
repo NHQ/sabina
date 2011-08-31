@@ -1,0 +1,32 @@
+!!!
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(href='http://fonts.googleapis.com/css?family=Raleway:100', rel='stylesheet', type='text/css')
+  body#portfolio
+    #menu
+      h1 PLD Construction and Development
+      ul
+        li 
+          a(href="/about") About
+        li 
+          a(href="/services") Services
+        li 
+          a(href="/portfolio", class="active") Portfolio
+        li 
+          a(href="/gallery") Gallery
+    #portfolio    
+      - each bldg, i in bldgs
+        #bldg
+          img(src=bldg.medium)
+          p= bldg.address
+          br
+          p Status: 
+            =bldg.status
+          br
+          p=bldg.description
+        form(action="/edit/bldg?id="+i, method="GET")
+          input(type="submit", value="edit this building")
+        form(action="/del/bldg?id="+i, method="GET")
+          input(type="submit", value="delete this building", onclick="confirm('Are you certain of this?')")

@@ -3,9 +3,10 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(href='http://fonts.googleapis.com/css?family=Raleway:100', rel='stylesheet', type='text/css')
   body#portfolio
     #menu
-      h2 PLD Construction and Development
+      h1 PLD Construction and Development
       ul
         li 
           a(href="/about") About
@@ -19,11 +20,13 @@ html
       ul
         - each s in sections
           if (s == section)
-            li=s
+            li
+              a(href="/gallery?section="+s, class="active") #{s}
           else
             li
               a(href="/gallery?section="+s) #{s}
     #content
-      - each g in gallery
+      - each g, i in gallery
+        -  var usa = g.thumb || g.medium 
         div.thumb
-          img(src=g.thumb)
+          img(src="../"+usa)

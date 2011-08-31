@@ -1,0 +1,52 @@
+!!!
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(href='http://fonts.googleapis.com/css?family=Raleway:100', rel='stylesheet', type='text/css')
+  body#portfolio
+    #menu
+      h1 PLD Construction and Development
+      ul
+        li 
+          a(href="/about") About
+        li 
+          a(href="/services") Services
+        li 
+          a(href="/portfolio") Portfolio
+        li 
+          a(href="/gallery") Gallery
+    form.cmxform(action="/new/bldg", method="post")
+      fieldset
+        legend A New Porpoerty File Has Been Created! Fill out the info, or 
+          a(href="/del/bldg?id="+id) delete it
+        ol
+          - each val, key in bldg
+            - if (key == 'description')
+              li.entry
+                label=key+':'
+                textarea(name=key)
+            - else if (val instanceof Object)
+               return
+            - else
+              li.entry
+                label=key+':'
+                input(type='text', name=key, value=val)
+        input(type="hidden", name="_id", value=id)
+        input(type="submit", id="submit", value="Save Changes!")
+    #pip
+      p Upload Cover Image For Building: 
+        form(action="http://api2.transloadit.com/assemblies", id="MyForm", enctype="multipart/form-data", method="POST")
+            input(type="hidden", name="params", value=JSON.stringify(tranny))
+            input(type="hidden", id="_id", name="_id", value=id)
+            input(type="file", name="my_file", id="file")
+            input(type="submit", value="Upload Image")
+            div#progress
+      - if (bldg.img && bldg.img.large)
+        #uploaded
+          img(src="../"+bldg.img.medium, class="preview")
+      - else 
+        #uploaded
+  script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js')
+  script(type="text/javascript", src="http://assets.transloadit.com/js/jquery.transloadit2.js")
+  script(type="text/javascript", src="/js/pld.js")

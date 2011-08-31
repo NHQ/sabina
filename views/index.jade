@@ -1,25 +1,21 @@
-#page
-  h1.editable= title
-  p Welcome to #{title}
-  ul
-    li Name
-    li Address
-    li Description
-    li Architect/Builder
-    li Neighborhood
-    li List Price
-    li Contact
-    li Zoning
-    li Taxes
-    li Year Built
-    li Floor Plane
-    li Pictures (General)
-    li Rooms/Sections
-  form(id="MyForm", action="http://api2.transloadit.com/assemblies", enctype="multipart/form-data", method="POST")
-    input(type="hidden", name="_id", value= doc._id)
-    input(type="hidden", name="params", value= escape(JSON.stringify(tranny)))
-    input(type="file", name="my_file")
-    input(type="submit", value="Upload")
+!!!
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(href='http://fonts.googleapis.com/css?family=Raleway:100', rel='stylesheet', type='text/css')
+  body#portfolio
+    #menu
+      h1 PLD Construction and Development
+      ul
+        li 
+          a(href="/edit/about") About
+        li 
+          a(href="/edit/services") Services
+        li 
+          a(href="/edit/portfolio") Portfolio
+        li 
+          a(href="/edit/gallery") Gallery
  
 script(type='text/javascript')
   $(document).ready(function(){

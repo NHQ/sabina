@@ -3,20 +3,21 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(href='http://fonts.googleapis.com/css?family=Raleway:100', rel='stylesheet', type='text/css')
   body#portfolio
     #menu
-      h2 PLD Construction and Development
+      h1 PLD Construction and Development
       ul
         li 
-          a(href="/about") About
+          a(href="/about", class="actice") About
         li 
           a(href="/services") Services
         li 
           a(href="/portfolio") Portfolio
         li 
           a(href="/gallery") Gallery
+    #sidebar
+      p ABOUT
     #content    
-      h2 About
-      #about
-        =about.text
+      p=about.text
         
