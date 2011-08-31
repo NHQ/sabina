@@ -1,0 +1,53 @@
+!!!
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body#portfolio
+    #menu
+      h2 PLD Construction and Development -- 
+        Admin 
+        a(href="") Logout
+      ul
+        li 
+          a(href="/edit/about") About
+        li 
+          a(href="/edit/services") Services
+        li 
+          a(href="/edit/portfolio") Portfolio
+        li 
+          a(href="/edit/gallery") Gallery
+    #sidebar
+      ul
+        - each s in sections
+          if (s == section)
+            li=s
+          else
+            li
+              a(href="/edit/gallery?section="+s) #{s}
+      h3 Add Another Section
+      form(action="/add/section", method="POST")
+        input(type="text", name="section", value="")
+        input(type="submit", value="Add New Section")
+      h3 Delete a section
+      p * this will delete all images in that section
+      form(action="/del/section", method="POST")
+        select(name="section")
+          - each s in sections
+            option(value=s) #{s}
+        input(type="submit",value="delete section!", onclick='confirm("Are you certain of this?")'))
+      h3 Upload image to #{section}
+      form(action="http://api2.transloadit.com/assemblies", id="galleryForm", enctype="multipart/form-data", method="POST")
+          input(type="hidden", name="params", value=JSON.stringify(tranny))
+          input(type="hidden", id="section", name="section", value=section)
+          input(type="file", name="my_file", id="file")
+          input(type="submit", value="Upload Image")
+          div#progress
+    #content
+      - for g in gallery
+        div.thumb
+          img(src=gallery[g].thumb || gallery[g].medium)
+        form(action="/del/image", action="POST")
+          input(type="hidden", name="image", value=section)
+          input(type="hidden", name="index", value=g)
+          input(type="submit", value="delete", onclick='confirm("Delete Image?")')
