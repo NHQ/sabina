@@ -149,7 +149,8 @@ app.get('/edit/gallery', function(req,res){
 	fs.readFile('public/json/gallery.json', encoding='utf8', function(e,r){
 		var content = JSON.parse(r);
 		var section = req.query.section || Object.keys(content)[0];
-				console.log(e+"\n"+r+"\n"+content[section]);
+				console.log(e+"\n"+r);
+				console.log(content[section])
 		res.render('editGallery', {layout: false, title: 'PLD Custom Home Builders', locals: {
 			section: section,
 			sections: Object.keys(content),
