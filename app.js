@@ -187,7 +187,7 @@ app.post('/del/image', function(req,res){
 	res.redirect('/edit/gallery')
 })
 app.get('/images', function(req,res){
-	fs.readdi	r('public/images', function(e,r){
+	fs.readdir('public/images', function(e,r){
 		res.send(r);
 	})
 })
