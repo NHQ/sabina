@@ -92,7 +92,7 @@ if (info.results.medium){
 
 	if(_id){
 		var portfolio = JSON.parse(fs.readFileSync('public/json/portfolio.json'));
-		portfolio[_id] = _.extend(portfolio[_id], {'large': 'images/large'+info.uploads[0].name, 'medium': 'images/medium_'+info.uplaods[0].name, 'thumb':'images/thumb_'+info.uploads[0].name})
+		portfolio[_id] = _.extend(portfolio[_id], {'large': 'images/large_'+info.uploads[0].name, 'medium': 'images/medium_'+info.uploads[0].name, 'thumb':'images/thumb_'+info.uploads[0].name})
 		fs.writeFile("public/json/portfolio.json", JSON.stringify(portfolio), function(e,r){
 			console.log(e || "no error")
 		});
