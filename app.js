@@ -148,8 +148,8 @@ app.get('/edit/gallery', function(req,res){
 	var d = fs.readFileSync('public/json/gallery.json');
 	fs.readFile('public/json/gallery.json', encoding='utf8', function(e,r){
 		var content = JSON.parse(r);
-		console.log(e+"\n"+r);
 		var section = req.query.section || Object.keys(content)[0];
+				console.log(e+"\n"+r+"\n"+content[section]);
 		res.render('editGallery', {layout: false, title: 'PLD Custom Home Builders', locals: {
 			section: section,
 			sections: Object.keys(content),
@@ -159,7 +159,7 @@ app.get('/edit/gallery', function(req,res){
 				{
 	    			"key": "08f81b65f9c4433796ca6f17861f57bf"
 	  			},
-				"redirect_url": "http://74.207.237.52:3000/edit/gallery?section="+section,
+				"redirect_url": "http://74.207.237.52:3000/edit/gallery?section="+section+"&",
 	 			"template_id": "b01e9ea666c741a4bc428d8b783b161d",
 				"notify_url": "http://74.207.237.52:3000/uploads"
 			}
@@ -186,7 +186,7 @@ app.post('/del/image', function(req,res){
 	res.redirect('/edit/gallery')
 })
 app.get('/images', function(req,res){
-	fs.readdir('public/images', function(e,r){
+	fs.readdi	r('public/images', function(e,r){
 		res.send(r);
 	})
 })

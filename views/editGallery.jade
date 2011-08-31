@@ -47,7 +47,7 @@ html
       - for g in gallery
         div.thumb
           img(src=gallery[g].thumb || gallery[g].medium)
-        form(action="/del/image", action="POST")
-          input(type="hidden", name="image", value=section)
-          input(type="hidden", name="index", value=g)
-          input(type="submit", value="delete", onclick='confirm("Delete Image?")')
+          form(action="/del/image", action="POST")
+            input(type="hidden", name="image", value=section)
+            input(type="hidden", name="index", value=g)
+            input(type="submit", value="delete", onclick='confirm("Delete Image?")')
