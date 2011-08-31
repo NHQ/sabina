@@ -82,7 +82,7 @@ if (info.results.medium){
 	if (info.fields.section)
 		{
 				var gallery = JSON.parse(fs.readFileSync('public/json/gallery.json'));
-				gallery[info.fields.section].push({'large': 'images/large_'+info.uploads.name, 'medium': 'images/medium_'+info.uploads.name, 'thumb':'images/thumb_'+info.uploads.name})
+				gallery[info.fields.section].push({'large': 'images/large_'+info.uploads[0].name, 'medium': 'images/medium_'+info.uploads[0].name, 'thumb':'images/thumb_'+info.uploads[0].name})
 				fs.writeFile("public/json/gallery.json", JSON.stringify(gallery), function(e,r){
 					console.log(e || "no error")
 				});
@@ -92,7 +92,7 @@ if (info.results.medium){
 
 	if(_id){
 		var portfolio = JSON.parse(fs.readFileSync('public/json/portfolio.json'));
-		portfolio[_id] = _.extend(portfolio[_id], {'large': 'images/large'+info.uploads.name, 'medium': 'images/medium_'+info.uplaods.name, 'thumb':'images/thumb_'+info.uploads.name})
+		portfolio[_id] = _.extend(portfolio[_id], {'large': 'images/large'+info.uploads[0].name, 'medium': 'images/medium_'+info.uplaods[0].name, 'thumb':'images/thumb_'+info.uploads[0].name})
 		fs.writeFile("public/json/portfolio.json", JSON.stringify(portfolio), function(e,r){
 			console.log(e || "no error")
 		});
