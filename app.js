@@ -68,21 +68,21 @@ app.post('/uploads', function (req, res){
 // get the image files
 
 _.each(info.uploads, function (e){
-	request.get(e.url).pipe(fs.createWriteStream('public/images/'+info.uploads.name))})
+	request.get(e.url).pipe(fs.createWriteStream('public/images/large_'+e.name))})
 	
 if (info.results.thumb){
 	_.each(info.results.thumb, function (e) {
-		request.get(e.url).pipe(fs.createWriteStream('public/images/'+info.encode.name))})}
+		request.get(e.url).pipe(fs.createWriteStream('public/images/thumb_'+e.name))})}
 
 if (info.results.medium){
 	_.each(info.results.medium, function (e) {
-	  request.get(e.url).pipe(fs.createWriteStream('public/images/'+info.encode.name))})}
+	  request.get(e.url).pipe(fs.createWriteStream('public/images/medium_'+e.name))})}
 
 // write to gallery.json
 	if (info.fields.section)
 		{
 				var gallery = JSON.parse(fs.readFileSync('public/json/gallery.json'));
-				gallery[info.fields.section].push({'large': 'images/'+info.uploads.url, 'medium': 'images/'+info.medium.url, 'thumb':'images/'+info.thumb.url})
+				gallery[info.fields.section].push({'large': 'images/large_'+info.uploads.name, 'medium': 'images/medium_'+info.uploads.name, 'thumb':'images/thumb_'+info.uploads.name})
 				fs.writeFile("public/json/gallery.json", JSON.stringify(gallery), function(e,r){
 					console.log(e || "no error")
 				});
