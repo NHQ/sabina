@@ -67,10 +67,16 @@ app.post('/uploads', function (req, res){
 	
 // get the image files
 
-	request.get(info.uploads[0].url).pipe(fs.createWriteStream('public/images/'+info.uploads.name));
-if (info.results.thumb){request.get(info.results.thumb.url).pipe(fs.createWriteStream('public/images/'+info.encode.name));}
+_.each(info.uploads, function (e){
+	request.get(e.url).pipe(fs.createWriteStream('public/images/'+info.uploads.name))})
+	
+if (info.results.thumb){
+	_.each(info.results.thumb, function (e) {
+		request.get(e.url).pipe(fs.createWriteStream('public/images/'+info.encode.name))})}
 
-if (info.results.medium){request.get(info.medium.url).pipe(fs.createWriteStream('public/images/'+info.encode.name));}
+if (info.results.medium){
+	_.each(info.results.medium, function (e) {
+	  request.get(e.url).pipe(fs.createWriteStream('public/images/'+info.encode.name))})}
 
 // write to gallery.json
 	if (info.fields.section)
@@ -86,8 +92,8 @@ if (info.results.medium){request.get(info.medium.url).pipe(fs.createWriteStream(
 
 	if(_id){
 		var portfolio = JSON.parse(fs.readFileSync('public/json/portfolio.json'));
-		porfolio[_id] = _.extend(portfolio[_id], {'img':{'large': 'images/'+info.uploads.url, 'medium': 'images/'+info.medium.url, 'thumb':'images/'+info.thumb.url}})
-		fs.writeFile("public/json/porfolio.json", JSON.stringify(porfolio), function(e,r){
+		portfolio[_id] = _.extend(portfolio[_id], {'large': 'images/'+info.uploads.url, 'medium': 'images/'+info.medium.url, 'thumb':'images/'+info.thumb.url})
+		fs.writeFile("public/json/portfolio.json", JSON.stringify(portfolio), function(e,r){
 			console.log(e || "no error")
 		});
 	}
