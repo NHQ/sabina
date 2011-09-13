@@ -1,0 +1,54 @@
+!!!
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(href='http://fonts.googleapis.com/css?family=Raleway:100', rel='stylesheet', type='text/css')
+  body#portfolio
+    #menu
+      h1 PLD Construction + Development
+      ul
+        li 
+          a(href="/about") About
+        li 
+          a(href="/services") Services
+        li 
+          a(href="/portfolio") Portfolio
+        li 
+          a(href="/gallery") Gallery
+        li 
+          a(href="/contact") Contact
+    #sidebar
+      a(href="edit/gallery") Edit Galleries
+      br
+      a(href="edit/portfolio") Edit Portfolio
+      br
+      a(href="new/bldg") Add New Bldg
+    #content
+      form.cmxform(action="/admin", method="post")
+        fieldset
+          legend All About PLD
+          input(type="submit", id="admin_submit", value="Save Changes!")
+          ol
+            li(style="margin-left:118px")
+              input(type="text", name="street", value=about.contact.street || "Street Address")
+              br
+              input(type="text", name="suite", value=about.contact.suite || "Suite")
+              br
+              input(type="text", name="city", value=about.contact.city || "City, State ZIP")
+              br
+              input(type="text", name="phone", value=about.contact.phone || "Phone")
+              br
+              input(type="text", name="fax", value=about.contact.fax || "Fax")
+              br
+              input(type="text", name="email", value=about.contact.email || "e-mail")
+              br
+            li
+              label About
+              textarea(name="about") #{about.about}
+            li
+              label Services / Design
+              textarea(name="design") #{about.services.design}
+            li
+              label Services / Build
+              textarea(name="build") #{about.services.build}

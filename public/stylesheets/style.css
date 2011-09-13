@@ -2,8 +2,11 @@ body {
   font: 16px 'Raleway', Helvetica, Arial, sans-serif;
   width:1150px;
   margin:0 auto;
+
 }
-p {width:66ex;}
+p {width:57ex;margin:0;-webkit-margin-before: 0;
+-webkit-margin-after: 0;line-height:30px}
+p#build{display:none}
 a {
   color: #aaa;
   text-transform:uppercase;
@@ -14,38 +17,59 @@ a:hover{border-bottom:1px dotted}
 .active {color:#000;border:none}
 h1{font-size:28px;margin-top:23px}
 .right{float:right}
-.m200{margin-left:200px;}
+.m200{margin-left:130px;}
 h3{border-top:1px solid #ddd;padding-top:15px;margin-top:5px}
 #content {
 	width:800px;
-    float:right
+    margin-left:300px;
+    margin-right:40px;
+    margin-top:27px;
+    margin-bottom: 150px;
 }
-
+#thumbs a:hover{border:none}
+#admin_submit{float:right}
 #menu {
     height:90px;
     margin:0 auto;
+    border-bottom: 1px solid #aaa 
 }
-#menu h1 {display:inline;float:left;}
+#menu h1 {display:inline;float:left;margin-left:27px}
 
-#menu ul {margin-right:0}
+#menu ul {margin-right:27px}
 #menu ul li {margin: 20px 20px; display:inline;float:right}
+#portfolio
+{
+    margin-top:27px;
+    padding-bottom:200px;
 
+}
+#portfolio #bldg:last-of-type {padding-bottom:200px}
+#portfolio #bldg {float:left;}
+#portfolio #bldg img {float:left;margin-left:27px}
+#portfolio #bldg p {margin-left:400px}
 #sidebar{
-    width:300px;
+    width:270px;
     float:left;
-    font-size:18px
+    font-size:18px;
+    margin-top:27px;
+    margin-left:27px
 }
 #sidebar ul {
     list-style-type:none;
 }
+#foot {background: #fff;bottom:0;left:0; position:fixed; width:300px;text-align:left;padding:13px 0}
+#foot p {margin-left:27px;font-size:12px}
+#sidebar fieldset{max-width:225px;margin-left:0}
 
-#sidebar fieldset{max-width:300px}
-
+#thumbs{}
+ul.thumbs{list-style-type:none; }
+ul.thumbs li {   display:inline; width:167px;
+    height:167px; overflow:hidden}
+p.note{width:225px}
 .thumb{display:inline;float:left;margin:5px}
 .thumb img{
     display:inline;
-    width:167px;
-    height:167px
+max-height:167px
 }
 .preview, .#uploaded {width:500px;
 height:500px}
@@ -106,3 +130,5 @@ form.cmxform label {
 form.cmxform fieldset fieldset label {
   margin-left: 123px; /* Width plus 3 (html space) */
 }
+
+

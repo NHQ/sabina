@@ -8,7 +8,10 @@ var express = require('express')
 	, request = require('request')
 	, fs = require('fs')
 	, sys = require('sys')
-	, formidable = require('formidable');
+	, formidable = require('formidable')
+    ,cluster = require('cluster')
+    , connect = require('connect')
+    ,http = require('http');
 
 var app = module.exports = express.createServer();
 
@@ -67,7 +70,7 @@ function pickles(x,size){
 }
 
 app.get('/', function(req, res){
-        	res.render('home', {layout: false, title: 'PLD Custom Home Builders'})
+        	res.render('index', {layout: false, locals: {title: "PLD Custom Homes Developmenet"}});
 })
 
 app.post('/uploads', function (req, res){
@@ -78,20 +81,21 @@ app.post('/uploads', function (req, res){
     fs.writeFileSync('public/json/ids.json', JSON.stringify(ids))
     console.log(info);
     console.log(info.results);
+    console.log(info.assebly_id);
 	var _id = info.fields._id || null;
 	
 // get the image files
 
 _.each(info.uploads, function (e){
-	var tree = request.get(e.url).pipe(fs.createWriteStream('public/images/large_'+e.name))})
+    request.get(e.url).pipe(fs.createWriteStream('public/images/large_'+e.name))})
 	
 if (info.results.thumb){
 	_.each(info.results.thumb, function (e) {
-	var p =	request.get(e.url).pipe(fs.createWriteStream('public/images/thumb_'+e.name))})}
+        request.get(e.url).pipe(fs.createWriteStream('public/images/thumb_'+e.name))})}
 
 if (info.results.medium){
 	_.each(info.results.medium, function (e) {
-	var t =  request.get(e.url).pipe(fs.createWriteStream('public/images/medium_'+e.name))})}
+        request.get(e.url).pipe(fs.createWriteStream('public/images/medium_'+e.name))})}
 // write to gallery.json
 	if (info.fields.section)
 		{
@@ -121,8 +125,33 @@ if (info.results.medium){
 		});
 	}
 })
-
-
+app.get('/admin', function(req, res){
+    fs.readFile('public/json/about.json', function(e,r){
+		console.log(e+"\n"+JSON.parse(r));
+		res.render('admin', {layout: false, title: 'PLD Custom Home Builders', locals: {
+			about: JSON.parse(r)
+			}})
+	})
+})
+app.post('/admin', function(req, res){
+    var about = JSON.parse(fs.readFileSync('public/json/about.json'));
+    var b = req.body;
+    about.contact = {street: b.street, suite: b.suite, city: b.city, phone: b.phone, fax: b.fax, email: b.email };
+    about.about = b.about;
+    about.services = {design: b.design, build: b.build}
+    fs.writeFile('public/json/about.json', JSON.stringify(about), function(e,r){
+        console.log(e+"\n"+r);
+        res.redirect('/admin')
+    })
+})
+app.get('/contact', function(req,res){
+    fs.readFile('public/json/about.json', function(e,r){
+    	console.log(e+"\n"+JSON.parse(r));
+		res.render('contact', {layout: false, title: 'PLD Custom Home Builders', locals: {
+			about: JSON.parse(r).contact
+			}})
+	})
+})
 app.get('/portfolio', function(req,res){
 	fs.readFile('public/json/portfolio.json', function(e,r){
 		console.log(e+"\n"+r);
@@ -130,6 +159,18 @@ app.get('/portfolio', function(req,res){
 			bldgs: JSON.parse(r)
 			}})
 	})
+})
+app.post('/edit/bldg', function(req,res){
+    console.log(req.body);
+    var _id = req.body._id;
+	var portfolio = JSON.parse(fs.readFileSync('public/json/portfolio.json'));
+	console.log(portfolio[_id]);
+	_.extend(portfolio[_id], req.body);
+		console.log(portfolio[_id]);
+	fs.writeFile("public/json/portfolio.json", JSON.stringify(portfolio), function(e,r){
+		console.log(e || "no error")
+        res.redirect('/edit/bldg?id='+_id);
+	});
 })
 
 app.post('/new/bldg', function(req,res){
@@ -158,10 +199,11 @@ app.get('/del/bldg', function(req,res){
     fs.writeFile('public/json/portfolio.json', JSON.stringify(b), function(e,r){
     	console.log(e+"\n"+r);
     })
+    red.redirect('/edit/portfolio')
 })
 
 app.get('/edit/bldg', function(req, res){
-    var bldg = {
+        var protobldg = {
 		address: "",
 		description: "",
 		status: ""
@@ -171,6 +213,7 @@ app.get('/edit/bldg', function(req, res){
     var bldg = JSON.parse(fs.readFileSync('public/json/portfolio.json'))[_id];
 	res.render('editBldg', {layout: false, title: 'New Building', locals: {
 		bldg: bldg,
+        proto: protobldg,
         id: _id,
 		tranny: {
   			"auth": 
@@ -178,7 +221,7 @@ app.get('/edit/bldg', function(req, res){
     			"key": "08f81b65f9c4433796ca6f17861f57bf"
   			},
  			"template_id": "b01e9ea666c741a4bc428d8b783b161d",
-			"notify_url": "http://74.207.237.52:3003/uploads?_id="+_id
+			"notify_url": "http://pldhomes.com/uploads?_id="+_id
 		}
 		}})
 })
@@ -204,7 +247,7 @@ app.get('/new/bldg', function(req, res){
     			"key": "08f81b65f9c4433796ca6f17861f57bf"
   			},
  			"template_id": "b01e9ea666c741a4bc428d8b783b161d",
-			"notify_url": "http://74.207.237.52:3003/uploads?_id="+_id
+			"notify_url": "http://pldhomes.com/uploads?_id="+_id
 		}
 		}})
 })
@@ -220,7 +263,7 @@ app.get('/about', function(req,res){
 })
 
 app.get('/services', function(req,res){
-	fs.readFile('public/json/services.json', function(e,r){
+	fs.readFile('public/json/about.json', function(e,r){
 		console.log(e+"\n"+r)
 		res.render('services', {layout: false, title: 'PLD Custom Home Builders', locals: {
 			services: JSON.parse(r)
@@ -246,7 +289,7 @@ app.post('/edit/gallery', function(req, res){
 })
 
 app.get('/edit/gallery', function(req,res){
-	var d = fs.readFileSync('public/json/gallery.json');
+	// var d = fs.readFileSync('public/json/gallery.json');
 	fs.readFile('public/json/gallery.json', encoding='utf8', function(e,r){
 		var content = JSON.parse(r);
 		var section = req.query.section || Object.keys(content)[0];
@@ -261,7 +304,7 @@ app.get('/edit/gallery', function(req,res){
 	    			"key": "08f81b65f9c4433796ca6f17861f57bf"
 	  			},
 	 			"template_id": "b01e9ea666c741a4bc428d8b783b161d",
-				"notify_url": "http://74.207.237.52:3003/uploads"
+				"notify_url": "http://pldhomes.com/uploads"
 			}
 			}})
 	})
@@ -276,6 +319,7 @@ app.post('/add/section', function(req,res){
 app.post('/del/section', function(req,res){
 	var d = JSON.parse(fs.readFileSync('public/json/gallery.json'));
 	delete d[req.body.section];
+    console.log(d);
 	fs.writeFile('public/json/gallery.json', JSON.stringify(d));
 	res.redirect('/edit/gallery')
 })
@@ -293,7 +337,15 @@ app.get('/images', function(req,res){
 	})
 })
 
+var server = connect.createServer();
+
+server.use(connect.vhost('pldhomes.com', app));
+
+cluster(server)
+  .set('workers', 4)
+  .use(cluster.debug())
+  .listen(80);
 
 
-app.listen(3003);
-console.log("Express server listening on port %d", app.address().port);
+//app.listen(3003);
+//console.log("Express server listening on port %d", app.address().port);

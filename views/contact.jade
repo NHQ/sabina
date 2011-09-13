@@ -1,0 +1,37 @@
+!!!
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(href='http://fonts.googleapis.com/css?family=Raleway:100', rel='stylesheet', type='text/css')
+  body#portfolio
+    #menu
+      h1 PLD Construction + Development
+      ul
+        li 
+          a(href="/about") About
+        li 
+          a(href="/services") Services
+        li 
+          a(href="/portfolio") Portfolio
+        li 
+          a(href="/gallery") Gallery
+        li 
+          a(href="/contact", class="active") Contact
+    #sidebar
+      p CONTACT
+    #content
+      p(style="font-weight:900")  Sabina Kontos, Principal
+      p(style="font-weight:900")  Derek Kupczk, Principal
+      p(style="text-decoration:underline") Address 
+      p=about.street
+      p=about.suite
+      p=about.city
+      p(style="text-decoration:underline") Phone
+      p=about.phone
+      p(style="text-decoration:underline") Fax
+      p=about.fax
+      p(style="text-decoration:underline") Email
+      a(href="mailto:"+about.email) #{about.email}
+    #foot
+      p © 2011 Promised Land Developmet

@@ -6,18 +6,21 @@ html
     link(href='http://fonts.googleapis.com/css?family=Raleway:100', rel='stylesheet', type='text/css')
   body#portfolio
     #menu
-      h1 PLD Construction and Development
+      h1 PLD Construction + Development
       ul
         li 
-          a(href="/about", class="actice") About
+          a(href="/about", class="active") About
         li 
           a(href="/services") Services
         li 
           a(href="/portfolio") Portfolio
         li 
           a(href="/gallery") Gallery
+        li 
+          a(href="/contact") Contact
     #sidebar
       p ABOUT
     #content    
-      p=about.text
-        
+      p!=about.about
+    #foot
+      p © 2011 Promised Land Developmet

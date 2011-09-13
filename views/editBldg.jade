@@ -6,32 +6,43 @@ html
     link(href='http://fonts.googleapis.com/css?family=Raleway:100', rel='stylesheet', type='text/css')
   body#portfolio
     #menu
-      h1 PLD Construction and Development
+      h1 PLD Construction + Development
       ul
         li 
           a(href="/about") About
         li 
           a(href="/services") Services
         li 
-          a(href="/portfolio", class="active") Portfolio
+          a(href="/portfolio") Portfolio
         li 
           a(href="/gallery") Gallery
-    form.cmxform(action="/edit/bldg", method="post", id=id)
+        li 
+          a(href="/contact") Contact
+    #sidebar
+      a(href="../admin") Edit Company Info
+      br
+      a(href="/edit/gallery") Edit Galleries
+      br
+      a(href="/edit/portfolio") Edit Portfolio
+    form.cmxform(action="/edit/bldg", method="post")
       fieldset
         legend Edit Property Details, or 
           a(href="/del/bldg?id="+id) delete
         ol
-          - each val, key in bldg
+          - each val, key in proto
             - if (key == 'description')
               li.entry
                 label=key+':'
-                textarea(name=key) #{val}
+                textarea(name=key) #{bldg.description}
+            - else if (key == '_id')
+              return
             - else if (val instanceof Object)
                return
             - else
               li.entry
                 label=key+':'
-                input(type='text', name=key, value=val)
+                input(type='text', name=key, value=bldg[key])
+        input(type="hidden", name="_id", value=id)
         input(type="submit", id="submit", value="Save Changes!")
     #pip
       p Upload New Cover Image For Building: 

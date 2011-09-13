@@ -6,7 +6,7 @@ html
     link(href='http://fonts.googleapis.com/css?family=Raleway:100', rel='stylesheet', type='text/css')
   body#portfolio
     #menu
-      h1 PLD Construction and Development
+      h1 PLD Construction + Development
       ul
         li 
           a(href="/about") About
@@ -16,13 +16,19 @@ html
           a(href="/portfolio", class="active") Portfolio
         li 
           a(href="/gallery") Gallery
+        li 
+          a(href="/contact") Contact
     #portfolio    
-      - each bldg in bldgs
-        #bldg
-          img(src=bldg.medium)
-          p= bldg.address
-          br
-          p Status: 
-            =bldg.status
-          br
-          p=bldg.description
+      - if (bldgs.length)
+        - each bldg in bldgs
+          #bldg
+            - if (bldg.img)
+              img(src=bldg.img.medium, width="300")
+            p= bldg.address
+            br
+            p Status: 
+              =bldg.status
+            br
+            p=bldg.description
+    #foot
+      p © 2011 Promised Land Developmet

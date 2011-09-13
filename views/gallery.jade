@@ -3,10 +3,13 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/jquery.lightbox-0.5.css')
     link(href='http://fonts.googleapis.com/css?family=Raleway:100', rel='stylesheet', type='text/css')
+    script(type='text/javascript', src='/js/jquery.min.js')
+    script(type='text/javascript', src='/js/jquery.lightbox-0.5.js')
   body#portfolio
     #menu
-      h1 PLD Construction and Development
+      h1 PLD Construction + Development
       ul
         li 
           a(href="/about") About
@@ -15,7 +18,9 @@ html
         li 
           a(href="/portfolio") Portfolio
         li 
-          a(href="/gallery") Gallery
+          a(href="/gallery", class="active") Gallery
+        li 
+          a(href="/contact") Contact
     #sidebar
       ul
         - each s in sections
@@ -25,8 +30,18 @@ html
           else
             li
               a(href="/gallery?section="+s) #{s}
+    #slideshow
+    #loading
     #content
-      - each g, i in gallery
-        -  var usa = g.thumb || g.medium 
-        div.thumb
-          img(src="../"+usa)
+      - if (!gallery)
+        p No Galleries Yet
+      - if (gallery)
+        div#thumbs
+          ul(class="thumbs noscript")
+            - each g, i in gallery
+                li
+                -  var usa = '../'+g.thumb || '../'+g.medium 
+                a(class="thumb", href="../"+g.medium, style="height:167px;width:167px;background:url(#{usa});background-size:cover")
+    #foot
+      p © 2011 Promised Land Developmet
+    script(type='text/javascript', src='/js/gallery.js')

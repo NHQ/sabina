@@ -6,27 +6,28 @@ html
     link(href='http://fonts.googleapis.com/css?family=Raleway:100', rel='stylesheet', type='text/css')
   body#portfolio
     #menu
-      h1 PLD Construction and Development
+      h1 PLD Construction + Development
       ul
         li 
           a(href="/about") About
         li 
           a(href="/services") Services
         li 
-          a(href="/portfolio", class="active") Portfolio
+          a(href="/portfolio") Portfolio
         li 
           a(href="/gallery") Gallery
+        li 
+          a(href="/contact") Contact
     #portfolio    
-      - each bldg, i in bldgs
-        #bldg
-          img(src=bldg.medium)
-          p= bldg.address
-          br
-          p Status: 
-            =bldg.status
-          br
-          p=bldg.description
-        form(action="/edit/bldg?id="+i, method="GET")
-          input(type="submit", value="edit this building")
-        form(action="/del/bldg?id="+i, method="GET")
-          input(type="submit", value="delete this building", onclick="confirm('Are you certain of this?')")
+      - if (bldgs.length)
+        - each bldg, i in bldgs
+          #bldg
+            div(style="margin-left:27px;display:block")
+              a(href="/edit/bldg?id="+i) Edit This Property
+            - if (bldg.img)
+              img(src="../"+bldg.img.medium, width="300")
+            p= bldg.address
+            p Status: 
+              =bldg.status
+            p=bldg.description
+            br

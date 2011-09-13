@@ -2,32 +2,27 @@
 html
   head
     title= title
+    meta(name="google-site-verification", content="aT3KyxqZaI-lJpCWWXH4x5yQhqXvGpneFiPyzhWeGeA")
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(href='http://fonts.googleapis.com/css?family=Raleway:100', rel='stylesheet', type='text/css')
   body#portfolio
     #menu
-      h1 PLD Construction and Development
+      h1 PLD Construction + Development
       ul
         li 
-          a(href="/edit/about") About
+          a(href="/about") About
         li 
-          a(href="/edit/services") Services
+          a(href="/services") Services
         li 
-          a(href="/edit/portfolio") Portfolio
+          a(href="/portfolio") Portfolio
         li 
-          a(href="/edit/gallery") Gallery
+          a(href="/gallery") Gallery
+        li 
+          a(href="/contact") Contact
  
-script(type='text/javascript')
-  $(document).ready(function(){
-  $('.editable').aloha();
-  $('#MyForm').transloadit({
-      wait: true,
-      autoSubmit: false,
-      fields: '#_id'
-    });
-  $('.editable').bind('click', function(){
-  $('#ext-comp-1016').hide();
-  setTimeout("$('#ext-comp-1016').hide().css({'left':0})", 600);
-
-  })
-  });
+    #content
+      em(style="position:absolute;color:#fff;top:200px;left:15%;font-size:97px;text-shadow:-3px 3px 3px #aaa ") "Your house 
+      em(style="position:absolute;color:#fff;top:330px;left:20%;font-size:97px;text-shadow:-3px 3px 3px #aaa") is your Larger Body"
+      p(style="width:500px;position:absolute;color:#aaa;left:55%;top:500px;font-size:62px") - Khalil Gibran
+    #foot
+      p © 2011 Promised Land Developmet

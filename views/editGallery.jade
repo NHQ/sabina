@@ -6,16 +6,18 @@ html
     link(href='http://fonts.googleapis.com/css?family=Raleway:100', rel='stylesheet', type='text/css')
   body#portfolio
     #menu
-      h1 PLD Construction and Development
+      h1 PLD Construction + Development
       ul
         li 
-          a(href="/edit/about") About
+          a(href="/about") About
         li 
-          a(href="/edit/services") Services
+          a(href="/services") Services
         li 
-          a(href="/edit/portfolio") Portfolio
+          a(href="/portfolio") Portfolio
         li 
-          a(href="/edit/gallery") Gallery
+          a(href="/gallery") Gallery
+        li 
+          a(href="/contact") Contact
     #sidebar
       ul
         - each s in sections
@@ -34,27 +36,33 @@ html
             input(type="file", name="my_file", id="file")
             input(type="submit", class="m200", value="Upload Image")
             div#progress
-        h3 Add Another Section
+        h3 Add Section
         form(action="/add/section", method="POST")
           input(type="text", name="section", value="")
           input(type="submit", value="Add New Section")
         h3 Delete a section
-        p * this will delete all images in that section
+        p.note * this will delete all images in that section
         form(action="/del/section", method="POST")
           select(name="section")
             - each s in sections
               option(value=s) #{s}
           input(type="submit",value="delete section!", onclick='confirm("Are you certain of this?")')
-
+      br
+      a(href="../admin") Edit Company Info
+      br
+      a(href="/edit/portfolio") Edit Portfolio
     #content
-      - each g, i in gallery
-        -  var usa = g.thumb || g.medium 
-        div.thumb
-          img(src="../"+usa)
-          form(action="/del/image", method="POST")
-            input(type="hidden", name="section", value=section)
-            input(type="hidden", name="index", value=i)
-            input(type="submit", value="delete", onclick='confirm("Delete Image?")')
+      - if (!gallery)
+        p No Galleries Yet, Add A section
+      - if (gallery)
+        - each g, i in gallery
+          -  var usa = g.medium || g.thumb 
+          div.thumb
+            img(src="../"+usa)
+            form(action="/del/image", method="POST")
+              input(type="hidden", name="section", value=section)
+              input(type="hidden", name="index", value=i)
+              input(type="submit", value="delete", onclick='confirm("Delete Image?")')
   script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js')
   script(type="text/javascript", src="http://assets.transloadit.com/js/jquery.transloadit2.js")
   script(type="text/javascript", src="/js/pld.js")
