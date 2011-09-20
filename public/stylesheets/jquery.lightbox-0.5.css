@@ -40,7 +40,7 @@
     max-width:1200px;
     max-height:1200px
 }
-#lightbox-container-image { padding: 10px; }
+#lightbox-container-image { padding: 0; }
 #lightbox-container-image img{ max-width:1000px }
 #lightbox-loading {
 	position: absolute;
@@ -64,8 +64,9 @@
 #lightbox-nav-btnPrev, #lightbox-nav-btnNext {
 	width: 45px;
 	height: 100%;
-	zoom: .5;
 	display: block;
+    -webkit-border-radius: 3px;
+    border-radius:3px
 }
 #lightbox-nav-btnPrev { 
 	left: 0;
@@ -101,10 +102,10 @@
 	padding-bottom: 1.0em;	
 }			
 #lightbox-secNav-btnClose {
-    background:#fff;
+    background:#000;
+    color:#fff;
     position:absolute;
     top: 10px;
-	width: 66px; 
-	right:10px;
-    border-radius:3px
+	right:20px;
+    font-size: 12px
 }

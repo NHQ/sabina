@@ -9,18 +9,20 @@ html
       h1 PLD Construction + Development
       ul
         li 
+          a(href="/") Home
+        li 
           a(href="/about") About
+        li 
+          a(href="/gallery") Gallery
         li 
           a(href="/services") Services
         li 
           a(href="/portfolio") Portfolio
         li 
-          a(href="/gallery") Gallery
-        li 
           a(href="/contact") Contact
     form.cmxform(action="/new/bldg", method="post")
       fieldset
-        legend A New Porpoerty File Has Been Created! Fill out the info, or 
+        legend A New Porperty File Has Been Created! Fill out the info, or 
           a(href="/del/bldg?id="+id) delete it
         ol
           - each val, key in bldg
@@ -42,7 +44,7 @@ html
             input(type="hidden", name="params", value=JSON.stringify(tranny))
             input(type="hidden", id="_id", name="_id", value=id)
             input(type="file", name="my_file", id="file")
-            input(type="submit", value="Upload Image")
+            input(type="submit", class="m200", value="Upload Image")
             div#progress
       - if (bldg.img && bldg.img.large)
         #uploaded
@@ -51,4 +53,4 @@ html
         #uploaded
   script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js')
   script(type="text/javascript", src="http://assets.transloadit.com/js/jquery.transloadit2.js")
-  script(type="text/javascript", src="/js/pld.js")
+  script(type="text/javascript", src="/js/portfolio.js")

@@ -22,7 +22,7 @@
 		// Settings to configure the jQuery lightBox plugin how you like
 		settings = jQuery.extend({
 			// Configuration related to overlay
-			overlayBgColor: 		'#fff',		// (string) Background color to overlay; inform a hexadecimal value like: #RRGGBB. Where RR, GG, and BB are the hexadecimal values for the red, green, and blue values of the color.
+			overlayBgColor: 		'#000',		// (string) Background color to overlay; inform a hexadecimal value like: #RRGGBB. Where RR, GG, and BB are the hexadecimal values for the red, green, and blue values of the color.
 			overlayOpacity:			0.8,		// (integer) Opacity value to overlay; inform: 0.X. Where X are number from 0 to 9
 			// Configuration related to navigation
 			fixedNavigation:		true,		// (boolean) Boolean that informs if the navigation (next and prev button) will be fixed or not in the interface.
@@ -33,7 +33,7 @@
 			imageBtnClose:			'images/lightbox-btn-close.gif',		// (string) Path and the name of the close btn
 			imageBlank:				'images/lightbox-blank.gif',			// (string) Path and the name of a blank image (one pixel)
 			// Configuration related to container image box
-			containerBorderSize:	10,			// (integer) If you adjust the padding in the CSS for the container, #lightbox-container-image-box, you will need to update this value
+			containerBorderSize:	0,			// (integer) If you adjust the padding in the CSS for the container, #lightbox-container-image-box, you will need to update this value
 			containerResizeSpeed:	400,		// (integer) Specify the resize duration of container image. These number are miliseconds. 400 is default.
 			// Configuration related to texts in caption. For example: Image 2 of 8. You can alter either "Image" and "of" texts.
 			txtImage:				'Image',	// (string) Specify text "Image"
@@ -54,6 +54,8 @@
 		 * @return boolean false
 		 */
 		function _initialize() {
+            $(window).scrollTop(0);
+            $('body').css('overflow','hidden')
 			_start(this,jQueryMatchedObj); // This, in this context, refer to object (link) which the user have clicked
 			return false; // Avoid the browser following the link
 		}
@@ -125,7 +127,7 @@
 		 */
 		function _set_interface() {
 			// Apply the HTML markup into body tag
-			$('body').append('<div id="jquery-overlay"></div><div id="jquery-lightbox"><div id="lightbox-container-image-box"><div id="lightbox-container-image"><img id="lightbox-image"><div style="" id="lightbox-nav"><a href="#" id="lightbox-nav-btnPrev"></a><a href="#" id="lightbox-nav-btnNext"></a></div><div id="lightbox-loading"><a href="#" id="lightbox-loading-link"><img src="' + settings.imageLoading + '"></a></div></div></div><div id="lightbox-container-image-data-box"><div id="lightbox-container-image-data"><div id="lightbox-image-details"><span id="lightbox-image-details-caption"></span><span id="lightbox-image-details-currentNumber"></span></div><div id="lightbox-secNav"><a href="#" id="lightbox-secNav-btnClose"><img src="' + settings.imageBtnClose + '" width="44"></a></div></div></div></div>');	
+			$('body').append('<div id="jquery-overlay"></div><div id="jquery-lightbox"><div id="lightbox-container-image-box"><div id="lightbox-container-image"><img id="lightbox-image"><div style="" id="lightbox-nav"><a href="#" id="lightbox-nav-btnPrev"></a><a href="#" id="lightbox-nav-btnNext"></a></div><div id="lightbox-loading"><a href="#" id="lightbox-loading-link"><img src="' + settings.imageLoading + '"></a></div></div></div><div id="lightbox-container-image-data-box"><div id="lightbox-container-image-data"><div id="lightbox-image-details"><span id="lightbox-image-details-caption"></span><span id="lightbox-image-details-currentNumber"></span></div><div id="lightbox-secNav"><a href="#" id="lightbox-secNav-btnClose">close</a></div></div></div></div>');	
 			// Get page sizes
 			var arrPageSizes = ___getPageSize();
 			// Style overlay and show it
@@ -133,7 +135,7 @@
 				backgroundColor:	settings.overlayBgColor,
 				opacity:			settings.overlayOpacity,
 				width:				arrPageSizes[0],
-				height:				arrPageSizes[1]
+				height:				arrPageSizes[3]
 			}).fadeIn();
 			// Get page scroll
 			var arrPageScroll = ___getPageScroll();
@@ -158,7 +160,7 @@
 				// Style overlay and show it
 				$('#jquery-overlay').css({
 					width:		arrPageSizes[0],
-					height:		arrPageSizes[1]
+					height:		arrPageSizes[3]
 				});
 				// Get page scroll
 				var arrPageScroll = ___getPageScroll();
@@ -205,12 +207,12 @@
 			var intCurrentHeight = $('#lightbox-container-image-box').height();
 			// Get the width and height of the selected image plus the padding
 			var intWidth = (intImageWidth + (settings.containerBorderSize * 2)); // Plus the image�s width and the left and right padding value
-			var intHeight = (intImageHeight + (settings.containerBorderSize * 2)); // Plus the image�s height and the left and right padding value
+			var intHeight = (intImageHeight); // Plus the image�s height and the left and right padding value
 			// Diferences
 			var intDiffW = intCurrentWidth - intWidth;
 			var intDiffH = intCurrentHeight - intHeight;
 			// Perfomance the effect
-			$('#lightbox-container-image-box').animate({ width: intWidth, height: intHeight },settings.containerResizeSpeed,function() { _show_image(); });
+			$('#lightbox-container-image-box').animate({ width: intWidth, height: ___getPageSize()[2] || 1000 },settings.containerResizeSpeed,function() { _show_image(); });
 			if ( ( intDiffW == 0 ) && ( intDiffH == 0 ) ) {
 				if ( $.browser.msie ) {
 					___pause(250);
@@ -219,7 +221,7 @@
 				}
 			} 
 			$('#lightbox-container-image-data-box').css({ width: intImageWidth });
-			$('#lightbox-nav-btnPrev,#lightbox-nav-btnNext').css({ height: 300 });
+			$('#lightbox-nav-btnPrev,#lightbox-nav-btnNext').css({ height: 300, 'margin-top': 100 });
 		};
 		/**
 		 * Show the prepared image
@@ -256,12 +258,12 @@
 			$('#lightbox-nav').show();
 
 			// Instead to define this configuration in CSS file, we define here. And it�s need to IE. Just.
-			$('#lightbox-nav-btnPrev,#lightbox-nav-btnNext').css({ 'background' : 'transparent url(' + settings.imageBlank + ') no-repeat' , 'background-size': '45px'});
-			
+			//$('#lightbox-nav-btnNext').html('→').css({ 'color':'#fff','font-size':'30px'});
+			//$('#lightbox-nav-btnPrev').html('←').css({ 'color':'#fff','font-size':'30px'});
 			// Show the prev button, if not the first image in set
 			if ( settings.activeImage != 0 ) {
 				if ( settings.fixedNavigation ) {
-					$('#lightbox-nav-btnPrev').css({ 'background' : 'url(' + settings.imageBtnPrev + ') left 30% no-repeat', 'background-size': '45px' })
+					$('#lightbox-nav-btnPrev').html('←').css({ 'color':'#fff','font-size':'30px'})
 						.unbind()
 						.bind('click',function() {
 							settings.activeImage = settings.activeImage - 1;
@@ -271,9 +273,9 @@
 				} else {
 					// Show the images button for Next buttons
 					$('#lightbox-nav-btnPrev').unbind().hover(function() {
-						$(this).css({ 'background' : 'url(' + settings.imageBtnPrev + ') left 30% no-repeat', 'background-size': '45px' });
+						$(this).html('←').css({ 'color':'#fff','font-size':'30px'});
 					},function() {
-						$(this).css({ 'background' : 'transparent url(' + settings.imageBlank + ') no-repeat' , 'background-size': '45px'});
+						$(this).html('←').css({ 'color':'#fff','font-size':'30px'});
 					}).show().bind('click',function() {
 						settings.activeImage = settings.activeImage - 1;
 						_set_image_to_view();
@@ -285,7 +287,7 @@
 			// Show the next button, if not the last image in set
 			if ( settings.activeImage != ( settings.imageArray.length -1 ) ) {
 				if ( settings.fixedNavigation ) {
-					$('#lightbox-nav-btnNext').css({ 'background' : 'url(' + settings.imageBtnNext + ') right 30% no-repeat' , 'background-size': '45px'})
+					$('#lightbox-nav-btnNext').html('→').css({ 'color':'#fff','font-size':'30px'})
 						.unbind()
 						.bind('click',function() {
 							settings.activeImage = settings.activeImage + 1;
@@ -295,9 +297,9 @@
 				} else {
 					// Show the images button for Next buttons
 					$('#lightbox-nav-btnNext').unbind().hover(function() {
-						$(this).css({ 'background' : 'url(' + settings.imageBtnNext + ') right 30% no-repeat', 'background-size': '45px' });
+						$(this).html('→').css({ 'color':'#fff','font-size':'30px'});
 					},function() {
-						$(this).css({ 'background' : 'transparent url(' + settings.imageBlank + ') no-repeat' , 'background-size': '45px'});
+						$(this).html('→').css({ 'color':'#fff','font-size':'30px'});
 					}).show().bind('click',function() {
 						settings.activeImage = settings.activeImage + 1;
 						_set_image_to_view();
@@ -386,6 +388,7 @@
 			$('#jquery-overlay').fadeOut(function() { $('#jquery-overlay').remove(); });
 			// Show some elements to avoid conflict with overlay in IE. These elements appear above the overlay.
 			$('embed, object, select').css({ 'visibility' : 'visible' });
+            $('body').css('overflow','visible');
 		}
 		/**
 		 / THIRD FUNCTION

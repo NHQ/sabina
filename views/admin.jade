@@ -9,13 +9,15 @@ html
       h1 PLD Construction + Development
       ul
         li 
+          a(href="/") Home
+        li 
           a(href="/about") About
+        li 
+          a(href="/gallery") Gallery
         li 
           a(href="/services") Services
         li 
           a(href="/portfolio") Portfolio
-        li 
-          a(href="/gallery") Gallery
         li 
           a(href="/contact") Contact
     #sidebar
@@ -24,6 +26,10 @@ html
       a(href="edit/portfolio") Edit Portfolio
       br
       a(href="new/bldg") Add New Bldg
+      br
+      a(href="add-cli") Add New Client Page
+      br
+      a(href="all-cli") All Client Pages
     #content
       form.cmxform(action="/admin", method="post")
         fieldset

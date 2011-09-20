@@ -35,17 +35,17 @@ h3{border-top:1px solid #ddd;padding-top:15px;margin-top:5px}
 }
 #menu h1 {display:inline;float:left;margin-left:27px}
 
-#menu ul {margin-right:27px}
-#menu ul li {margin: 20px 20px; display:inline;float:right}
+#menu ul {float:right;margin-top:24px}
+#menu ul li {margin: 0 9px; display:inline;}
 #portfolio
 {
     margin-top:27px;
     padding-bottom:200px;
 
 }
-#portfolio #bldg:last-of-type {padding-bottom:200px}
-#portfolio #bldg {float:left;}
-#portfolio #bldg img {float:left;margin-left:27px}
+
+#portfolio #bldg {float:left; border-bottom:1px solid #AAA;margin-bottom:2em}
+#portfolio #bldg img {float:left;margin-left:27px;padding-bottom:2em}
 #portfolio #bldg p {margin-left:400px}
 #sidebar{
     width:270px;
@@ -75,6 +75,7 @@ max-height:167px
 height:500px}
 #admin{}
 #pip{margin:0 auto; width:800px}
+p.descript{text-indent:3ex}
 form.cmxform{
 	width:700px;
 	margin:0 auto;

@@ -1,0 +1,54 @@
+!!!
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(href='http://fonts.googleapis.com/css?family=Raleway:100', rel='stylesheet', type='text/css')
+  body#portfolio
+    #menu
+      h1 PLD + #{name}
+      ul
+        li 
+          a(href="/") Home
+        li 
+          a(href="/about") About
+        li 
+          a(href="/gallery") Gallery
+        li 
+          a(href="/services") Services
+        li 
+          a(href="/portfolio") Portfolio
+        li 
+          a(href="/contact") Contact
+    #portfolio    
+      h2
+        a(href='../../update/'+name.replace(/\s/g, '_'), style="border-bottom:1px solid #aaa") Add New Update to #{name}
+      - if (blog.updates.length)
+        - each update, index in blog.updates
+          #bldg
+            a(href='../../update/'+name.replace(/\s/g, '_')+'?index='+index) Edit This Update
+            form(method="post", action="../../del/update")
+              input(type="hidden", name="index", value=index)
+              input(type="hidden", name="name", value=name.replace(/\s/g, '_'))
+              input(type="submit", value="Delete Update")
+            br
+            - if (update.img)
+              img(src='../../'+update.img.large, width="300")
+            - if (update.completed)
+              p Completed:
+              p=update.completed
+              br
+            - if (update.scheduled)
+              p Scheduled: 
+              p=update.scheduled
+              br
+            - if (update.notes)
+              p Notes: 
+              p=update.notes
+              br
+            p Updated: 
+            p=update.date
+            br
+            br
+    #foot
+      p © 2011 Promised Land Developmet

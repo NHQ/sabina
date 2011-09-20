@@ -1,0 +1,49 @@
+!!!
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(href='http://fonts.googleapis.com/css?family=Raleway:100', rel='stylesheet', type='text/css')
+  body#portfolio
+    #menu
+      h1 PLD + #{name}
+      ul
+        li 
+          a(href="/") Home
+        li 
+          a(href="/about") About
+        li 
+          a(href="/gallery") Gallery
+        li 
+          a(href="/services") Services
+        li 
+          a(href="/portfolio") Portfolio
+        li 
+          a(href="/contact") Contact
+    #portfolio    
+      - if (blog.updates.length)
+        - each update in blog.updates
+          #bldg
+            - if (update.img)
+              img(src='../'+update.img.large, width="300")
+            - if (update.header)
+              p=update.header
+              br
+            - if (update.completed)
+              p Completed:
+              p=update.completed
+              br
+            - if (update.scheduled)
+              p Scheduled: 
+              p=update.scheduled
+              br
+            - if (update.notes)
+              p Notes: 
+              p=update.notes
+              br
+            p Updated: 
+            p=update.date
+            br
+            br
+    #foot
+      p © 2011 Promised Land Developmet

@@ -36,6 +36,11 @@ app.configure('production', function(){
 
 // Routes
 
+app.get('/sitemap', function(req, res) {
+    var xml = fs.readFileSync('public/json/sitemap.xml')
+    res.send(xml);
+});
+
 function picload(id, valu){
 	// keys is an obj
 	var doc = JSON.parse(fs.readFileSync('public/json/'+req.params.code+'.json'))
@@ -110,6 +115,21 @@ if (info.results.medium){
 					console.log(e || "no error")
 				});
 		}
+        
+// for client imgs
+
+    if(info.fields.index && info.fields.name){
+        var client = JSON.parse(fs.readFileSync('public/json/client/'+info.fields.name+'.json'))
+        var added = {};
+        added.large = 'images/large_'+info.uploads[0].name;
+        if (info.results.thumb) added.thumb =  'images/thumb_'+info.results.thumb[0].name;
+        if (info.results.medium) added.medium = 'images/medium_'+info.results.medium[0].name;
+    	client.updates[info.fields.index].img = added;
+        fs.writeFile('public/json/client/'+info.fields.name+'.json', JSON.stringify(client), function(e,r){
+    		console.log(e || "no error")
+		});
+        
+    }
 
 // for Bldg pictures	
 
@@ -199,7 +219,7 @@ app.get('/del/bldg', function(req,res){
     fs.writeFile('public/json/portfolio.json', JSON.stringify(b), function(e,r){
     	console.log(e+"\n"+r);
     })
-    red.redirect('/edit/portfolio')
+    res.redirect('/edit/portfolio')
 })
 
 app.get('/edit/bldg', function(req, res){
@@ -287,6 +307,15 @@ app.get('/gallery', function(req,res){
 app.post('/edit/gallery', function(req, res){
 	res.redirect('/edit/gallery?section='+req.query.section)
 })
+app.post('/index/image', function(req,res){
+    var index = req.body.index, section = req.body.gallery, posiiton = req.body.position;
+    var imgs = JSON.parse(fs.readFileSync('public/json/gallery.json'));
+    imgs.section.splice(index, 0, imgs.section.splice(position, 1)[0]);
+    fs.writeFile('public/json/gallery.json', JSON.stringify(imgs), function(e,r){
+        console.log(e+"\n"+r);
+        res.redirect('back')
+    })
+})
 
 app.get('/edit/gallery', function(req,res){
 	// var d = fs.readFileSync('public/json/gallery.json');
@@ -336,7 +365,87 @@ app.get('/images', function(req,res){
 		res.send(r);
 	})
 })
+app.get('/all-cli', function(req,res){
+    var clients = fs.readdirSync('public/json/client');
+   res.render('all-cli', {title:'All Clients', layout:false, locals:{list: clients}})
+   //res.send(clients)
+})
+app.get('/add-cli', function(req, res){
+    res.render('addClient', {title:'Add New Client', layout:false})
+})
 
+app.post('/new/cli', function(req,res){
+    var name = req.body.name.replace(/\s/g,'_');
+    var blog = {};
+    blog.name = name;
+    blog.updates = [];
+    fs.writeFile('public/json/client/'+name+'.json', JSON.stringify(blog), function(e,r){
+        console.log(e+"\n"+r);
+        res.redirect('/update/'+name)
+    })
+})
+app.get('/update/:name', function(req,res){
+    var client = JSON.parse(fs.readFileSync('public/json/client/'+req.params.name+'.json'));
+    if (req.query.index){
+        var update = client.updates[req.query.index];
+        console.log(req.query)
+    }
+    else {
+        var update = {header:"",completed:"",scheduled:"", notes:"", date:""};
+        client.updates.unshift(update);
+        fs.writeFile('public/json/client/'+req.params.name+'.json', JSON.stringify(client), function(e,r){
+            console.log(e+"\n"+r);
+        })   
+    }
+    console.log(update);
+    res.render('updateClient', {title:'Client Updates', layout: false, locals:{index: req.query.index || 0, name: req.params.name.replace(/_/g, ' '), update: update, tranny: {
+	  			"auth": 
+				{
+	    			"key": "08f81b65f9c4433796ca6f17861f57bf"
+	  			},
+	 			"template_id": "b01e9ea666c741a4bc428d8b783b161d",
+				"notify_url": "http://pldhomes.com/uploads"
+			}}})
+})
+
+app.post('/update/:name', function(req, res){
+    var client = JSON.parse(fs.readFileSync('public/json/client/'+req.params.name+'.json'));
+    var update = {};
+    //update.img = {};
+    var target = client.updates[req.body.index];
+    target.header = req.body.header;
+    target.completed = req.body.completed;
+    target.scheduled = req.body.scheduled;
+    target.notes = req.body.notes;
+    target.date = req.body.date;
+    fs.writeFile('public/json/client/'+req.params.name+'.json', JSON.stringify(client), function(e,r){
+        console.log(e+"\n"+r);
+        res.redirect('/edit/client/'+req.params.name)
+    })
+})
+app.get('/client/:name', function(req, res){
+    var client = JSON.parse(fs.readFileSync('public/json/client/'+req.params.name+'.json'));
+    res.render('client', {title: req.params.name.replace(/_/g, ' '), layout: false, locals: {name: req.params.name.replace(/_/g, ' '), blog: client}})
+})
+ app.get('/edit/client/:name', function(req,res){
+    var client = JSON.parse(fs.readFileSync('public/json/client/'+req.params.name+'.json'));
+    res.render('edit-client', {title: req.params.name.replace(/_/g, ' '), layout: false, locals: {name: req.params.name.replace(/_/g, ' '), blog: client}})      
+ })
+ app.post('/del/update', function(req, res){
+    var client = JSON.parse(fs.readFileSync('public/json/client/'+req.body.name+'.json'));
+    client.updates.splice(req.body.index,1)
+    fs.writeFile('public/json/client/'+req.body.name+'.json', JSON.stringify(client), function(e,r){
+        console.log(e+"\n"+r);
+        res.redirect('/edit/client/'+req.body.name)
+    })
+ })
+app.post('/del/client', function(req,res){
+    fs.unlink('public/json/client/'+req.body.name, function(e,r){
+    console.log(e+"\n"+r);
+    res.redirect('/all-cli')
+    })
+    
+})
 var server = connect.createServer();
 
 server.use(connect.vhost('pldhomes.com', app));

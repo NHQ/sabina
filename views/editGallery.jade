@@ -9,13 +9,15 @@ html
       h1 PLD Construction + Development
       ul
         li 
+          a(href="/") Home
+        li 
           a(href="/about") About
+        li 
+          a(href="/gallery") Gallery
         li 
           a(href="/services") Services
         li 
           a(href="/portfolio") Portfolio
-        li 
-          a(href="/gallery") Gallery
         li 
           a(href="/contact") Contact
     #sidebar
@@ -56,9 +58,14 @@ html
         p No Galleries Yet, Add A section
       - if (gallery)
         - each g, i in gallery
-          -  var usa = g.medium || g.thumb 
+          -  var usa = g.thumb || g.medium 
           div.thumb
             img(src="../"+usa)
+            form(action="../index/image", method="POST")
+              input(type="hidden", name="gallery", value=section)
+              input(type="hidden", name="position", value=i)
+              input(type="text", name="index", value=i, style="width:30px")
+              input(type="submit", value="change index");
             form(action="/del/image", method="POST")
               input(type="hidden", name="section", value=section)
               input(type="hidden", name="index", value=i)

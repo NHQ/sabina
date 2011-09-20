@@ -1,0 +1,46 @@
+!!!
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(href='http://fonts.googleapis.com/css?family=Raleway:100', rel='stylesheet', type='text/css')
+  body#portfolio
+    #menu
+      h1 PLD Construction + Development
+      ul
+        li 
+          a(href="/") Home
+        li 
+          a(href="/about") About
+        li 
+          a(href="/gallery") Gallery
+        li 
+          a(href="/services") Services
+        li 
+          a(href="/portfolio") Portfolio
+        li 
+          a(href="/contact") Contact
+    #sidebar
+      a(href="edit/gallery") Edit Galleries
+      br
+      a(href="edit/portfolio") Edit Portfolio
+      br
+      a(href="new/bldg") Add New Bldg
+      br
+      a(href="add-cli") Add New Client Page
+      br
+      a(href="all-cli") All Client Pages
+    #content
+      - for (c in list)
+        h2
+          #{list[c].replace('.json','').replace(/_/g,' ')}
+        p +
+          a(href='client/'+list[c].replace('.json','')) View Client Updates
+        p + 
+          a(href='update/'+list[c].replace('.json','')) Add New Update 
+        p + 
+          a(href='edit/client/'+list[c].replace('.json','')) Edit Existing Updates
+        p  
+          form(action='del/client/', method="post")
+            input(type="hidden", name="name", value=list[c])
+            input(type="submit", value="delete "+list[c].replace('.json','').replace(/_/g, ' '))
