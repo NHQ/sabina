@@ -232,7 +232,7 @@
 			$('#lightbox-image').fadeIn(function() {
 				_show_image_data();
 				_set_navigation();
-			});
+			}).css('max-height', ___getPageSize()[3])
 			_preload_neighbor_images();
 		};
 		/**

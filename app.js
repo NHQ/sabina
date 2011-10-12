@@ -308,12 +308,13 @@ app.post('/edit/gallery', function(req, res){
 	res.redirect('/edit/gallery?section='+req.query.section)
 })
 app.post('/index/image', function(req,res){
-    var index = req.body.index, section = req.body.gallery, posiiton = req.body.position;
-    var imgs = JSON.parse(fs.readFileSync('public/json/gallery.json'));
-    imgs.section.splice(index, 0, imgs.section.splice(position, 1)[0]);
-    fs.writeFile('public/json/gallery.json', JSON.stringify(imgs), function(e,r){
+    console.log(req.body);
+    res.redirect('back')
+    var index = req.body.index, section = req.body.gallery, position = req.body.position;
+    var gallery = JSON.parse(fs.readFileSync('public/json/gallery.json'));
+    gallery[section].splice(index, 0, gallery[section].splice(position, 1)[0]);
+    fs.writeFile('public/json/gallery.json', JSON.stringify(gallery), function(e,r){
         console.log(e+"\n"+r);
-        res.redirect('back')
     })
 })
 
@@ -322,7 +323,7 @@ app.get('/edit/gallery', function(req,res){
 	fs.readFile('public/json/gallery.json', encoding='utf8', function(e,r){
 		var content = JSON.parse(r);
 		var section = req.query.section || Object.keys(content)[0];
-				console.log(e+"\n"+r);
+				console.log(e);
 		res.render('editGallery', {layout: false, title: 'PLD Custom Home Builders', locals: {
 			section: section,
 			sections: Object.keys(content),
@@ -451,7 +452,7 @@ var server = connect.createServer();
 server.use(connect.vhost('pldhomes.com', app));
 
 cluster(server)
-  .set('workers', 4)
+  .set('workers', 2)
   .use(cluster.debug())
   .listen(80);
 

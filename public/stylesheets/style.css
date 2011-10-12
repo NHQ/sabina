@@ -66,7 +66,7 @@ ul.thumbs{list-style-type:none; }
 ul.thumbs li {   display:inline; width:167px;
     height:167px; overflow:hidden}
 p.note{width:225px}
-.thumb{display:inline;float:left;margin:5px}
+.thumb{display:inline;float:left;margin:5px;height:210px;width:180px}
 .thumb img{
     display:inline;
 max-height:167px
