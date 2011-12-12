@@ -7,7 +7,7 @@ var express = require('express')
 	,	_ = require('underscore')
 	, request = require('request')
 	, fs = require('fs')
-	, sys = require('sys')
+	, sys = require('util')
 	, formidable = require('formidable')
     ,cluster = require('cluster')
     , connect = require('connect')
@@ -58,13 +58,13 @@ app.post('/picload', function(req, res){
 	form.on('progress', function(bytesReceived, bytesExpected){
 		var buff = new Buffer(bytesReceived.toString(),encoding='utf8')
 		res.write(buff);
-		console.log(bytesReceived +'\n'+ bytesExpected)
+//		console.log(bytesReceived +'\n'+ bytesExpected)
 	})
 	form.on('end', function(){
 		res.end();
 	})
 	form.parse(req, function(err, fields, files){
-		console.log(fields+'\n'+files)
+ 	console.log(fields+'\n'+files)
 	});
 });
 
@@ -84,9 +84,9 @@ app.post('/uploads', function (req, res){
     if (_.include(ids, info.assembly_id)){return};
     ids.push(info.assembly_id);
     fs.writeFileSync('public/json/ids.json', JSON.stringify(ids))
-    console.log(info);
-    console.log(info.results);
-    console.log(info.assebly_id);
+//    console.log(info);
+ //   console.log(info.results);
+  //  console.log(info.assebly_id);
 	var _id = info.fields._id || null;
 	
 // get the image files
@@ -147,7 +147,7 @@ if (info.results.medium){
 })
 app.get('/admin', function(req, res){
     fs.readFile('public/json/about.json', function(e,r){
-		console.log(e+"\n"+JSON.parse(r));
+//		console.log(e+"\n"+JSON.parse(r));
 		res.render('admin', {layout: false, title: 'PLD Custom Home Builders', locals: {
 			about: JSON.parse(r)
 			}})
@@ -160,13 +160,13 @@ app.post('/admin', function(req, res){
     about.about = b.about;
     about.services = {design: b.design, build: b.build}
     fs.writeFile('public/json/about.json', JSON.stringify(about), function(e,r){
-        console.log(e+"\n"+r);
+//        console.log(e+"\n"+r);
         res.redirect('/admin')
     })
 })
 app.get('/contact', function(req,res){
     fs.readFile('public/json/about.json', function(e,r){
-    	console.log(e+"\n"+JSON.parse(r));
+ //   	console.log(e+"\n"+JSON.parse(r));
 		res.render('contact', {layout: false, title: 'PLD Custom Home Builders', locals: {
 			about: JSON.parse(r).contact
 			}})
@@ -174,40 +174,40 @@ app.get('/contact', function(req,res){
 })
 app.get('/portfolio', function(req,res){
 	fs.readFile('public/json/portfolio.json', function(e,r){
-		console.log(e+"\n"+r);
+//		console.log(e+"\n"+r);
 		res.render('portfolio', {layout: false, title: 'PLD Custom Home Builders', locals: {
 			bldgs: JSON.parse(r)
 			}})
 	})
 })
 app.post('/edit/bldg', function(req,res){
-    console.log(req.body);
+ //   console.log(req.body);
     var _id = req.body._id;
 	var portfolio = JSON.parse(fs.readFileSync('public/json/portfolio.json'));
 	console.log(portfolio[_id]);
 	_.extend(portfolio[_id], req.body);
-		console.log(portfolio[_id]);
+//		console.log(portfolio[_id]);
 	fs.writeFile("public/json/portfolio.json", JSON.stringify(portfolio), function(e,r){
-		console.log(e || "no error")
+//		console.log(e || "no error")
         res.redirect('/edit/bldg?id='+_id);
 	});
 })
 
 app.post('/new/bldg', function(req,res){
-    console.log(req.body);
+ //   console.log(req.body);
 	var _id = req.body._id;
 	var portfolio = JSON.parse(fs.readFileSync('public/json/portfolio.json'));
 	console.log(portfolio[_id]);
 	_.extend(portfolio[_id], req.body);
-		console.log(portfolio[_id]);
+//		console.log(portfolio[_id]);
 	fs.writeFile("public/json/portfolio.json", JSON.stringify(portfolio), function(e,r){
-		console.log(e || "no error")
+//		console.log(e || "no error")
         res.redirect('/edit/bldg?id='+_id);
 	});
 })
 app.get('/edit/portfolio', function(req,res){
     fs.readFile('public/json/portfolio.json', function(e,r){
-		console.log(e+"\n"+r);
+//		console.log(e+"\n"+r);
 		res.render('editPortfolio', {layout: false, title: 'PLD Custom Home Builders', locals: {
 			bldgs: JSON.parse(r)
 			}})
@@ -217,7 +217,7 @@ app.get('/del/bldg', function(req,res){
     var b = JSON.parse(fs.readFileSync('public/json/portfolio.json'));
     b.splice(req.query.id,1)
     fs.writeFile('public/json/portfolio.json', JSON.stringify(b), function(e,r){
-    	console.log(e+"\n"+r);
+ //   	console.log(e+"\n"+r);
     })
     res.redirect('/edit/portfolio')
 })
@@ -229,7 +229,7 @@ app.get('/edit/bldg', function(req, res){
 		status: ""
 	};
     var _id = req.query.id;
-	console.log(_id);
+//	console.log(_id);
     var bldg = JSON.parse(fs.readFileSync('public/json/portfolio.json'))[_id];
 	res.render('editBldg', {layout: false, title: 'New Building', locals: {
 		bldg: bldg,
@@ -275,7 +275,7 @@ app.get('/new/bldg', function(req, res){
 
 app.get('/about', function(req,res){
 	fs.readFile('public/json/about.json',encoding='utf8', function(e,r){
-		console.log(e+"\n"+r)
+//		console.log(e+"\n"+r)
 		res.render('about', {layout: false, title: 'PLD Custom Home Builders', locals: {
 			about: JSON.parse(r)
 			}})
@@ -284,7 +284,7 @@ app.get('/about', function(req,res){
 
 app.get('/services', function(req,res){
 	fs.readFile('public/json/about.json', function(e,r){
-		console.log(e+"\n"+r)
+//		console.log(e+"\n"+r)
 		res.render('services', {layout: false, title: 'PLD Custom Home Builders', locals: {
 			services: JSON.parse(r)
 			}})
@@ -308,13 +308,13 @@ app.post('/edit/gallery', function(req, res){
 	res.redirect('/edit/gallery?section='+req.query.section)
 })
 app.post('/index/image', function(req,res){
-    console.log(req.body);
+ //   console.log(req.body);
     res.redirect('back')
     var index = req.body.index, section = req.body.gallery, position = req.body.position;
     var gallery = JSON.parse(fs.readFileSync('public/json/gallery.json'));
     gallery[section].splice(index, 0, gallery[section].splice(position, 1)[0]);
     fs.writeFile('public/json/gallery.json', JSON.stringify(gallery), function(e,r){
-        console.log(e+"\n"+r);
+   //     console.log(e+"\n"+r);
     })
 })
 
@@ -323,7 +323,7 @@ app.get('/edit/gallery', function(req,res){
 	fs.readFile('public/json/gallery.json', encoding='utf8', function(e,r){
 		var content = JSON.parse(r);
 		var section = req.query.section || Object.keys(content)[0];
-				console.log(e);
+	//			console.log(e);
 		res.render('editGallery', {layout: false, title: 'PLD Custom Home Builders', locals: {
 			section: section,
 			sections: Object.keys(content),
@@ -349,15 +349,15 @@ app.post('/add/section', function(req,res){
 app.post('/del/section', function(req,res){
 	var d = JSON.parse(fs.readFileSync('public/json/gallery.json'));
 	delete d[req.body.section];
-    console.log(d);
+//    console.log(d);
 	fs.writeFile('public/json/gallery.json', JSON.stringify(d));
 	res.redirect('/edit/gallery')
 })
 app.post('/del/image', function(req,res){
-    console.log(req.body);
+ //   console.log(req.body);
 	var d = JSON.parse(fs.readFileSync('public/json/gallery.json'));
     d[req.body.section].splice([req.body.index],1)
-    console.log(d);
+ //   console.log(d);
     fs.writeFile('public/json/gallery.json', JSON.stringify(d));
 	res.redirect('/edit/gallery?section='+req.body.section)
 })
@@ -381,7 +381,7 @@ app.post('/new/cli', function(req,res){
     blog.name = name;
     blog.updates = [];
     fs.writeFile('public/json/client/'+name+'.json', JSON.stringify(blog), function(e,r){
-        console.log(e+"\n"+r);
+ //       console.log(e+"\n"+r);
         res.redirect('/update/'+name)
     })
 })
@@ -389,16 +389,16 @@ app.get('/update/:name', function(req,res){
     var client = JSON.parse(fs.readFileSync('public/json/client/'+req.params.name+'.json'));
     if (req.query.index){
         var update = client.updates[req.query.index];
-        console.log(req.query)
+ //       console.log(req.query)
     }
     else {
         var update = {header:"",completed:"",scheduled:"", notes:"", date:""};
         client.updates.unshift(update);
         fs.writeFile('public/json/client/'+req.params.name+'.json', JSON.stringify(client), function(e,r){
-            console.log(e+"\n"+r);
+ //           console.log(e+"\n"+r);
         })   
     }
-    console.log(update);
+//    console.log(update);
     res.render('updateClient', {title:'Client Updates', layout: false, locals:{index: req.query.index || 0, name: req.params.name.replace(/_/g, ' '), update: update, tranny: {
 	  			"auth": 
 				{
@@ -420,7 +420,7 @@ app.post('/update/:name', function(req, res){
     target.notes = req.body.notes;
     target.date = req.body.date;
     fs.writeFile('public/json/client/'+req.params.name+'.json', JSON.stringify(client), function(e,r){
-        console.log(e+"\n"+r);
+  //      console.log(e+"\n"+r);
         res.redirect('/edit/client/'+req.params.name)
     })
 })
@@ -436,13 +436,13 @@ app.get('/client/:name', function(req, res){
     var client = JSON.parse(fs.readFileSync('public/json/client/'+req.body.name+'.json'));
     client.updates.splice(req.body.index,1)
     fs.writeFile('public/json/client/'+req.body.name+'.json', JSON.stringify(client), function(e,r){
-        console.log(e+"\n"+r);
+//        console.log(e+"\n"+r);
         res.redirect('/edit/client/'+req.body.name)
     })
  })
 app.post('/del/client', function(req,res){
     fs.unlink('public/json/client/'+req.body.name, function(e,r){
-    console.log(e+"\n"+r);
+//    console.log(e+"\n"+r);
     res.redirect('/all-cli')
     })
     
